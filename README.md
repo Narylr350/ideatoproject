@@ -40,7 +40,7 @@
 
 ### 2. 完整文档模式
 
-如果用户不只要目录结构，也希望把核心文档一次性落到仓库中，可以进入 `full-docs` 模式。
+如果用户不只要目录结构，也希望把核心文档一次性落到仓库中，可以进入 `full-docs`（结构 + 核心文档落盘）模式。
 
 该模式会根据需求动态填充：
 
@@ -59,13 +59,13 @@
 
 当前支持：
 
-- `overlay-only`
+- `overlay-only`（只叠加项目结构层、bootstrap 层和文档层，不动业务代码）
 
 retrofit 时会优先生成：
 
-- `AGENTS.md`
-- `CLAUDE.md`
-- `AI_CONTEXT.md`
+- `AGENTS.md`（给 AI 的仓库入口说明）
+- `CLAUDE.md`（兼容其他 AI 工具的入口说明）
+- `AI_CONTEXT.md`（低 token 的项目上下文索引）
 - `docs/archive/`
 - `docs/context/retrofit-mapping.md`
 - `docs/context/`
@@ -75,9 +75,9 @@ retrofit 时会优先生成：
 
 同时会处理已有 `AGENTS.md` / `CLAUDE.md` 的保留策略：
 
-- `skip`
-- `append`
-- `overwrite`
+- `skip`（跳过，不改已有文件）
+- `append`（追加，把新引导块补到原文件后面）
+- `overwrite`（覆盖，用新内容替换）
 
 并且会为历史文档、旧项目资料和过期的执行支持材料预留归档目录：
 
@@ -87,15 +87,20 @@ retrofit 时会优先生成：
 
 整体流程为下面这条主线：
 
-1. 判断模式：`structure-only` / `full-docs` / `retrofit-existing-project`
-2. 确认复杂任务执行方式：`superpowers` 或 `repo-native`
+1. 判断模式：
+   `structure-only`（只创建项目结构） /
+   `full-docs`（项目结构 + 核心文档一起生成） /
+   `retrofit-existing-project`（给已有项目补 AI 友好的结构层）
+2. 确认复杂任务执行方式：
+   `superpowers`（复杂任务执行增强） 或
+   `repo-native`（项目内生工作流，主要靠仓库自己的 docs 和 task index）
 3. 做最小必要的需求澄清
 4. 先给出项目结构建议，而不是直接落盘
 5. 用户确认后，用脚本生成仓库结构和上下文文档
 
 ### 关于 superpowers
 
-`superpowers` 对复杂代码任务是增强项，但并不适合所有阶段。
+`superpowers`（复杂任务执行增强）对复杂代码任务是增强项，但并不适合所有阶段。
 
 这个项目不会默认强推 `using-superpowers`。
 
@@ -111,13 +116,13 @@ retrofit 时会优先生成：
 - 对发散型探索、需求讨论、结构推演这类工作，往往会削弱灵活性
 - 如果仓库没有自己的文档和结构约束，容易让工作痕迹偏向通用 workflow，而不是项目自身结构
 
-**什么时候选 `superpowers`**
+**什么时候选 `superpowers`（复杂任务执行增强）**
 
 - 任务已经进入明确执行阶段
 - 需要跨多个文件、模块或系统协同修改
 - 需要严格的验证闭环，而不是只讨论方案
 
-**什么时候选 `repo-native`**
+**什么时候选 `repo-native`（项目内生工作流）**
 
 - 当前仍处于想法收敛、需求讨论、结构设计阶段
 - 任务比较轻，没必要引入额外执行流程
@@ -127,7 +132,7 @@ retrofit 时会优先生成：
   - `docs/context/*`
   - 可选 `development-roadmap.md`
 
-如果用户选择 `superpowers`，复杂编码任务可以使用 `using-superpowers`，但输出仍然必须映射回当前仓库的 canonical 路径，不能创建通用的 `docs/superpowers/**`。
+如果用户选择 `superpowers`，复杂编码任务可以使用 `using-superpowers`，但输出仍然必须映射回当前仓库自己的 canonical 路径，不能创建通用的 `docs/superpowers/**`。
 
 这里的设计目标是把它的执行纪律内化进仓库，而不是模仿它的文档体系。也就是说：
 

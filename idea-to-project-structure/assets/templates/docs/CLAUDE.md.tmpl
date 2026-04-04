@@ -13,8 +13,9 @@ Use this reading chain:
 5. `docs/context/development-roadmap.md`{{roadmapReadNote}}
 6. `docs/context/architecture.md`
 7. `docs/context/tech-stack.md`
-8. relevant files under `docs/engineering/`
-9. relevant files under `docs/tasks/`
+8. `docs/tasks/user/INDEX.md`
+9. relevant files under `docs/engineering/`
+10. relevant files under `docs/tasks/`
 
 ## Purpose
 
@@ -23,7 +24,9 @@ This repository uses layered project context so a new AI conversation can recove
 - `AI_CONTEXT.md` is the compressed bootstrap index.
 - `docs/context/` stores stable project meaning.
 - `docs/engineering/` stores technical contracts.
+- `docs/tasks/user/INDEX.md` stores the core evolving task-state summary.
 - `docs/tasks/` stores module-local execution context.
+- `docs/archive/` stores historical docs and superseded project materials.
 
 ## Project Notes
 
@@ -35,7 +38,7 @@ This repository uses layered project context so a new AI conversation can recove
 
 ## Maintenance Rule
 
-When project structure or canonical project understanding changes, update `AI_CONTEXT.md` and the relevant context docs together.
+When project structure or canonical project understanding changes, update `AI_CONTEXT.md`, `docs/tasks/user/INDEX.md`, and the relevant context docs together.
 
 ## Repository Structure Priority
 
@@ -46,7 +49,14 @@ When project structure or canonical project understanding changes, update `AI_CO
   - `docs/product/` for product intent
   - `docs/engineering/` for engineering contracts
   - `docs/tasks/` for task and module records
+  - `docs/archive/` for historical docs, older project materials, and superseded planning artifacts
 - Keep repository-level rules generic and intentional; do not inherit personal conventions from unrelated source repositories by accident.
+
+## Mandatory Writeback
+
+- `docs/tasks/user/INDEX.md` is the core task-state file for this repository.
+- After each completed task, the AI must write back the latest effective status, notable shipped changes, and next-task implications to `docs/tasks/user/INDEX.md`.
+- If historical execution docs or older project materials are no longer active, move them under `docs/archive/` instead of leaving them mixed into active context.
 
 ## Superpowers Mapping
 

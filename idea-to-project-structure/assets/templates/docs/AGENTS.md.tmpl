@@ -13,8 +13,9 @@ Do not try to understand the whole repository by scanning random files first. Us
 5. `docs/context/development-roadmap.md`{{roadmapReadNote}}
 6. `docs/context/architecture.md`
 7. `docs/context/tech-stack.md`
-8. relevant files under `docs/engineering/`
-9. relevant files under `docs/tasks/`
+8. `docs/tasks/user/INDEX.md`
+9. relevant files under `docs/engineering/`
+10. relevant files under `docs/tasks/`
 
 ## Why This Exists
 
@@ -34,7 +35,7 @@ This repository is organized to reduce token waste across repeated AI sessions.
 
 ## Working Rule
 
-When structure, architecture, or domain ownership changes, update `AI_CONTEXT.md` and the affected canonical docs in the same change.
+When structure, architecture, or domain ownership changes, update `AI_CONTEXT.md`, `docs/tasks/user/INDEX.md`, and the affected canonical docs in the same change.
 
 ## Repository Structure Priority
 
@@ -45,7 +46,14 @@ When structure, architecture, or domain ownership changes, update `AI_CONTEXT.md
   - `docs/product/` for product intent
   - `docs/engineering/` for technical contracts
   - `docs/tasks/` for task and module records
+  - `docs/archive/` for historical docs, older project materials, and superseded planning artifacts
 - Do not copy workflow habits from other repositories unless they are intentionally adopted here.
+
+## Mandatory Writeback
+
+- `docs/tasks/user/INDEX.md` is the core task-state file for this repository.
+- After each completed task, the AI must write back the latest effective status, notable shipped changes, and next-task implications to `docs/tasks/user/INDEX.md`.
+- If historical execution docs or older project materials are no longer active, move them under `docs/archive/` instead of leaving them mixed into active context.
 
 ## Superpowers Mapping
 

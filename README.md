@@ -65,6 +65,7 @@ retrofit 时会优先生成：
 - `AGENTS.md`
 - `CLAUDE.md`
 - `AI_CONTEXT.md`
+- `docs/archive/`
 - `docs/context/retrofit-mapping.md`
 - `docs/context/`
 - `docs/engineering/`
@@ -76,6 +77,11 @@ retrofit 时会优先生成：
 - `skip`
 - `append`
 - `overwrite`
+
+并且会把历史文档、旧项目资料和过期的执行支持材料归档到：
+
+- `docs/archive/legacy/`
+- `docs/archive/proposal-pack/`
 
 ## 工作流概览
 
@@ -124,6 +130,12 @@ retrofit 时会优先生成：
 如果用户选择 `superpowers`，复杂编码任务可以使用 `using-superpowers`，但输出仍然必须映射回当前仓库的 canonical 路径，不能创建通用的 `docs/superpowers/**`。
 
 这样即使不依赖外部 skill，也能让项目在后续 AI 会话中持续可管理。
+
+这个工作流里最关键的低成本上下文文件不是某个总 README，而是：
+
+- `docs/tasks/user/INDEX.md`
+
+它应当持续记录当前有效状态、最近完成的关键变更、下一步任务，以及仍然存在的已知问题。任务完成后必须回写这个文件，否则后续 AI 会话对项目状态的理解会越来越不准确。
 
 ## 目录结构
 
@@ -255,22 +267,6 @@ node idea-to-project-structure/scripts/init-project-structure.mjs \
 - 对复杂任务的管理方式必须可配置：`superpowers` 或 `repo-native`
 - 老项目改造默认保守，不默认重构源码目录
 
-## 后续方向
-
-当前版本已经完成以下闭环：
-
-- 点子 -> 项目结构
-- 点子 -> 项目结构 + 核心 docs
-- 旧项目 -> AI 友好 bootstrap/docs 层
-
-后续更值得继续验证的方向是：
-
-- 用真实项目跑 `retrofit` 验证字段是否足够
-- 继续打磨 `overlay-and-restructure` 的受控重构流程
-- 根据真实使用情况微调提问深度和默认形态推荐
-
 ## 许可证
 
 本仓库使用 [MIT License](./LICENSE)。
-
-在当前版本中，没有把 `superpowers` 或其他外部 skill 的代码目录直接打包进仓库；仓库包含的是对这些工作流的兼容说明、映射规则和本项目自己的脚本与模板。

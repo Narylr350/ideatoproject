@@ -21,6 +21,13 @@ Before finalizing the structure, explicitly ask whether the user wants `using-su
 
 If the user does not want `using-superpowers`, internalize project-management discipline into the repository itself through `docs/context/`, `docs/tasks/`, `docs/testing/`, and optional roadmap docs so the project remains manageable across future AI sessions.
 
+The repository should also preserve a clear separation between active context and history:
+
+- active project context and live task state stay under `docs/context/`, `docs/engineering/`, and `docs/tasks/`
+- historical docs, older project materials, and superseded execution support artifacts should move under `docs/archive/`
+
+The core low-token task-state file should be `docs/tasks/user/INDEX.md`. After each completed task, the AI is expected to write back the current effective status there so future sessions can recover project state cheaply and accurately.
+
 If the user does want `using-superpowers` and the environment does not already have the relevant skill installed, help them install it before relying on it.
 
 ## Use This Skill When
@@ -395,6 +402,7 @@ Typical retrofit outputs:
 - new root `CLAUDE.md`
 - new root `AI_CONTEXT.md`
 - `docs/context/retrofit-mapping.md`
+- `docs/archive/`
 - `docs/context/`
 - `docs/engineering/`
 - `docs/tasks/`
@@ -426,6 +434,7 @@ Reuse the structure pattern:
 - `AGENTS.md`
 - `CLAUDE.md`
 - `AI_CONTEXT.md`
+- `docs/archive/`
 - `docs/context/`
 - `docs/product/`
 - `docs/engineering/`
@@ -440,5 +449,6 @@ Do not copy LoopNova's specific apps, modules, or domain names unless the user's
 - In `retrofit-existing-project` mode, default to leaving existing `AGENTS.md` and `CLAUDE.md` untouched unless the user explicitly chooses append or overwrite behavior.
 - For `retrofit-existing-project`, use `--instruction-file-mode skip|append|overwrite` to control how existing `AGENTS.md` and `CLAUDE.md` are handled.
 - Use `--execution-workflow superpowers|repo-native` to control the complex-task execution model written into the generated docs.
+- The generated repository should always include `docs/tasks/user/INDEX.md` as the core task-state file and require writeback after each completed task.
 - If the user only wants planning output, do not run the script.
 - If the user wants a custom shape beyond the built-ins, propose the shape first, then either adapt the closest built-in or extend the script.

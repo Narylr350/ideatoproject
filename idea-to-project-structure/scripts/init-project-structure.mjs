@@ -444,7 +444,7 @@ async function detectDomains(projectRoot) {
     }
   }
 
-  return [...new Set(["platform", ...candidates.filter(Boolean)])];
+  return [...new Set(["user", "platform", ...candidates.filter(Boolean)])];
 }
 
 async function detectCanonicalDocs(projectRoot) {
@@ -653,6 +653,9 @@ async function main() {
     apps = discovered.apps;
     domains = discovered.domains;
     directories = new Set([
+      "docs/archive",
+      "docs/archive/legacy",
+      "docs/archive/proposal-pack",
       "docs/context",
       "docs/product",
       "docs/engineering",
@@ -757,7 +760,7 @@ async function main() {
       force: Boolean(args.force)
     };
 
-    domains = [...new Set(["platform", ...splitCsv(args.domains)])];
+    domains = [...new Set(["user", "platform", ...splitCsv(args.domains)])];
     apps = [...shapeConfig.apps];
     const optionalApps = shapeConfig.optionalApps ?? [];
     for (const optionalApp of optionalApps) {
@@ -783,6 +786,9 @@ async function main() {
     }
     if (config.docsMode === "loopnova") {
       [
+        "docs/archive",
+        "docs/archive/legacy",
+        "docs/archive/proposal-pack",
         "docs/context",
         "docs/product",
         "docs/engineering",

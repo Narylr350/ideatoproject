@@ -2,7 +2,7 @@
 
 一个面向 AI 协作场景的轻量化技能项目，用于把“一个模糊点子”快速收敛成可执行的项目结构，而不是直接生成冗长 PRD。
 
-它吸收了 `product-requirements` 的需求提问方式，以及 `LoopNova` 的上下文分层思路，但不会绑定固定技术栈，也不会强制套用某个仓库模板。核心目标是两件事：
+它吸收了 `product-requirements` 的需求提问方式，以及实际AI开发工作流的上下文分层思路，但不会绑定固定技术栈，也不会强制套用某个模板。核心目标是两件事：
 
 - 从点子快速产出合理的项目结构
 - 生成对后续 AI 对话友好的仓库文档分层，降低重复理解项目的 token 成本
@@ -79,7 +79,7 @@ retrofit 时会优先生成：
 
 ## 工作流概览
 
-整体流程已经收敛为下面这条主线：
+整体流程为下面这条主线：
 
 1. 判断模式：`structure-only` / `full-docs` / `retrofit-existing-project`
 2. 确认复杂任务执行方式：`superpowers` 或 `repo-native`
@@ -89,17 +89,39 @@ retrofit 时会优先生成：
 
 ### 关于 superpowers
 
+`superpowers` 对复杂代码任务是增强项，但并不适合所有阶段。
+
 这个项目不会默认强推 `using-superpowers`。
 
-- 如果用户选择 `superpowers`
-  复杂编码任务可以使用 `using-superpowers`，但输出必须映射回当前仓库的 canonical 路径，不能创建通用的 `docs/superpowers/**`
+**优点**
 
-- 如果用户选择 `repo-native`
-  项目管理能力会内化到仓库里，主要依赖：
+- 更适合多步实现、跨模块改动、复杂重构和非 trivial 调试
+- 更容易把 `plan -> implement -> verify` 执行完整
+- 对复杂编码任务的过程控制更强，适合需要稳定交付的场景
+
+**代价**
+
+- 启动成本和流程成本更高，不适合所有任务都使用
+- 对发散型探索、需求讨论、结构推演这类工作，往往会削弱灵活性
+- 如果仓库没有自己的文档和结构约束，容易让工作痕迹偏向通用 workflow，而不是项目自身结构
+
+**什么时候选 `superpowers`**
+
+- 任务已经进入明确执行阶段
+- 需要跨多个文件、模块或系统协同修改
+- 需要严格的验证闭环，而不是只讨论方案
+
+**什么时候选 `repo-native`**
+
+- 当前仍处于想法收敛、需求讨论、结构设计阶段
+- 任务比较轻，没必要引入额外执行流程
+- 希望项目管理能力完全内化到仓库中，主要依赖：
   - `docs/tasks/<domain>/`
   - `docs/testing/`
   - `docs/context/*`
   - 可选 `development-roadmap.md`
+
+如果用户选择 `superpowers`，复杂编码任务可以使用 `using-superpowers`，但输出仍然必须映射回当前仓库的 canonical 路径，不能创建通用的 `docs/superpowers/**`。
 
 这样即使不依赖外部 skill，也能让项目在后续 AI 会话中持续可管理。
 
@@ -133,6 +155,61 @@ ideatoproject/
   结构形态定义
 - `agents/openai.yaml`
   agent 接入配置
+
+## 安装方式
+
+### 1. 克隆仓库
+
+```bash
+git clone <your-repo-url>
+cd ideatoproject
+```
+
+### 2. 安装 skill
+
+这个仓库本身是一个 skill 项目，核心 skill 目录为：
+
+```text
+idea-to-project-structure/
+```
+
+你可以用复制或软链接的方式，把它接到本地 Codex skill 目录。
+
+#### 方式一：直接复制
+
+把下面这个目录复制到本地 skill 目录中：
+
+```text
+idea-to-project-structure
+```
+
+目标位置通常是：
+
+```text
+C:\Users\<你的用户名>\.codex\skills\idea-to-project-structure
+```
+
+#### 方式二：使用目录链接
+
+如果你希望仓库内改动能直接生效，推荐使用目录链接。
+
+Windows PowerShell 示例：
+
+```powershell
+New-Item -ItemType Junction `
+  -Path "$env:USERPROFILE\.codex\skills\idea-to-project-structure" `
+  -Target "D:\Narylr\ideatoproject\idea-to-project-structure"
+```
+
+### 3. 重新打开新会话
+
+安装完成后，建议开启一个新的 Codex 会话，再使用：
+
+```text
+idea-to-project-structure
+```
+
+如果你选择让项目支持 `superpowers` 工作流，还需要保证本机已安装对应 skill；如果没有，按照环境里的 skill 安装流程补齐即可。
 
 ## 使用方式
 
@@ -194,4 +271,6 @@ node idea-to-project-structure/scripts/init-project-structure.mjs \
 
 ## 许可证
 
-当前仓库尚未声明许可证。如需开源发布，建议补充 `LICENSE` 文件。
+本仓库使用 [MIT License](./LICENSE)。
+
+在当前版本中，没有把 `superpowers` 或其他外部 skill 的代码目录直接打包进仓库；仓库包含的是对这些工作流的兼容说明、映射规则和本项目自己的脚本与模板。

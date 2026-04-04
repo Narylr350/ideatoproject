@@ -99,6 +99,7 @@ retrofit 时会优先生成：
 5. 用户确认后，用脚本生成仓库结构和上下文文档
 
 ### 关于 superpowers
+<https://github.com/obra/superpowers>
 
 `superpowers`（复杂任务执行增强）对复杂代码任务是增强项，但并不适合所有阶段。
 

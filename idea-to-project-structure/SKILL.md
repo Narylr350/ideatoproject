@@ -26,7 +26,9 @@ The repository should also preserve a clear separation between active context an
 - active project context and live task state stay under `docs/context/`, `docs/engineering/`, and `docs/tasks/`
 - historical docs, older project materials, and superseded execution support artifacts should move under `docs/archive/`
 
-The core low-token task-state file should be `docs/tasks/user/INDEX.md`. After each completed task, the AI is expected to write back the current effective status there so future sessions can recover project state cheaply and accurately.
+The core low-token task-state files should be the module indexes under `docs/tasks/<module>/INDEX.md`. After each completed task, the AI is expected to write back the current effective status to the affected module indexes so future sessions can recover project state cheaply and accurately.
+
+Follow a minimal-impact rule: a single task should stay inside one module whenever practical. If a task genuinely crosses module boundaries, update every affected module `INDEX.md`.
 
 If the user does want `using-superpowers` and the environment does not already have the relevant skill installed, help them install it before relying on it.
 
@@ -449,6 +451,7 @@ Do not copy LoopNova's specific apps, modules, or domain names unless the user's
 - In `retrofit-existing-project` mode, default to leaving existing `AGENTS.md` and `CLAUDE.md` untouched unless the user explicitly chooses append or overwrite behavior.
 - For `retrofit-existing-project`, use `--instruction-file-mode skip|append|overwrite` to control how existing `AGENTS.md` and `CLAUDE.md` are handled.
 - Use `--execution-workflow superpowers|repo-native` to control the complex-task execution model written into the generated docs.
-- The generated repository should always include `docs/tasks/user/INDEX.md` as the core task-state file and require writeback after each completed task.
+- The generated repository should use `docs/tasks/<module>/INDEX.md` as the module task-state files and require writeback after each completed task.
+- Prefer task decomposition that keeps work inside one module. Only update multiple module indexes when the task genuinely crosses those boundaries.
 - If the user only wants planning output, do not run the script.
 - If the user wants a custom shape beyond the built-ins, propose the shape first, then either adapt the closest built-in or extend the script.

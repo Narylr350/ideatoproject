@@ -34,7 +34,7 @@ For any non-trivial task, read in this order before implementation:
 4. `docs/context/development-roadmap.md`{{roadmapReadNote}}
 5. `docs/context/architecture.md`
 6. `docs/context/tech-stack.md`
-7. `docs/tasks/user/INDEX.md`
+7. the relevant `docs/tasks/<module>/INDEX.md` files for the task
 8. relevant files under `docs/engineering/`
 9. relevant files under `docs/tasks/`
 
@@ -46,7 +46,7 @@ For any non-trivial task, read in this order before implementation:
 - structure and boundaries: `docs/context/architecture.md`
 - stack decisions and runtime baseline: `docs/context/tech-stack.md`
 - engineering contracts: `docs/engineering/`
-- current cross-task delivery state: `docs/tasks/user/INDEX.md`
+- current module delivery state: the affected `docs/tasks/<module>/INDEX.md` files
 - module and work records: `docs/tasks/`
 
 ## Why This Layering Exists
@@ -55,7 +55,7 @@ For any non-trivial task, read in this order before implementation:
 - `AI_CONTEXT.md` gives the shortest possible whole-project bootstrap.
 - `docs/context/` stores stable project meaning and structure.
 - `docs/engineering/` stores contracts that implementation work must follow.
-- `docs/tasks/user/INDEX.md` stores the core evolving task-state summary.
+- `docs/tasks/<module>/INDEX.md` stores the evolving state summary for each module.
 - `docs/tasks/` stores module-local working history and current notes.
 - `docs/archive/` stores historical docs, archived project materials, and superseded execution support docs.
 
@@ -81,8 +81,9 @@ For any non-trivial task, read in this order before implementation:
 
 1. define scope
 2. confirm the target app or module
-3. make the smallest structure-aware change
-4. write back the latest effective task state to `docs/tasks/user/INDEX.md`
-5. update affected docs if boundaries or contracts move
-6. archive superseded history under `docs/archive/` when it is no longer active context
-7. leave the repository consistent for the next task
+3. keep the task impact as local to one module as possible
+4. make the smallest structure-aware change
+5. write back the latest effective task state to the affected `docs/tasks/<module>/INDEX.md` files
+6. update affected docs if boundaries or contracts move
+7. archive superseded history under `docs/archive/` when it is no longer active context
+8. leave the repository consistent for the next task

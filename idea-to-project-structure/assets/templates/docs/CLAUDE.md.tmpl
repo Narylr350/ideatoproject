@@ -13,7 +13,7 @@ Use this reading chain:
 5. `docs/context/development-roadmap.md`{{roadmapReadNote}}
 6. `docs/context/architecture.md`
 7. `docs/context/tech-stack.md`
-8. `docs/tasks/user/INDEX.md`
+8. the relevant `docs/tasks/<module>/INDEX.md` files for the task
 9. relevant files under `docs/engineering/`
 10. relevant files under `docs/tasks/`
 
@@ -24,7 +24,7 @@ This repository uses layered project context so a new AI conversation can recove
 - `AI_CONTEXT.md` is the compressed bootstrap index.
 - `docs/context/` stores stable project meaning.
 - `docs/engineering/` stores technical contracts.
-- `docs/tasks/user/INDEX.md` stores the core evolving task-state summary.
+- `docs/tasks/<module>/INDEX.md` stores the evolving state summary for each module.
 - `docs/tasks/` stores module-local execution context.
 - `docs/archive/` stores historical docs and superseded project materials.
 
@@ -38,7 +38,7 @@ This repository uses layered project context so a new AI conversation can recove
 
 ## Maintenance Rule
 
-When project structure or canonical project understanding changes, update `AI_CONTEXT.md`, `docs/tasks/user/INDEX.md`, and the relevant context docs together.
+When project structure or canonical project understanding changes, update `AI_CONTEXT.md`, the affected `docs/tasks/<module>/INDEX.md` files, and the relevant context docs together.
 
 ## Repository Structure Priority
 
@@ -54,8 +54,10 @@ When project structure or canonical project understanding changes, update `AI_CO
 
 ## Mandatory Writeback
 
-- `docs/tasks/user/INDEX.md` is the core task-state file for this repository.
-- After each completed task, the AI must write back the latest effective status, notable shipped changes, and next-task implications to `docs/tasks/user/INDEX.md`.
+- `docs/tasks/<module>/INDEX.md` files are the core module-state files for this repository.
+- After each completed task, the AI must write back the latest effective status, notable shipped changes, and next-task implications to the affected module `INDEX.md` files.
+- A single task should minimize its module impact whenever possible. Prefer work that stays within one module instead of spreading changes across unrelated modules.
+- If a task genuinely crosses module boundaries, update every affected module `INDEX.md` so the repository state stays accurate.
 - If historical execution docs or older project materials are no longer active, move them under `docs/archive/` instead of leaving them mixed into active context.
 
 ## Superpowers Mapping

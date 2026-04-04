@@ -42,7 +42,7 @@ Options:
   --roadmap-goal <text>     high-level target route for the project
   --milestones <text>       milestone list separated by |
   --docs-mode <value>       loopnova | none
-  --retrofit-depth <value>  overlay-only | overlay-and-restructure
+  --retrofit-depth <value>  overlay-only
   --instruction-file-mode <value> skip | append | overwrite
   --project-root <dir>      existing repository root for retrofit mode
   --dry-run                 print plan only
@@ -615,7 +615,7 @@ async function main() {
 
     const discovered = await discoverExistingProject(projectRoot, args, manifest);
     const retrofitDepth = args["retrofit-depth"] ?? "overlay-only";
-    if (!["overlay-only", "overlay-and-restructure"].includes(retrofitDepth)) {
+    if (!["overlay-only"].includes(retrofitDepth)) {
       throw new Error(`Unsupported retrofit depth: ${retrofitDepth}`);
     }
     const instructionFileMode = args["instruction-file-mode"] ?? "skip";
@@ -701,17 +701,11 @@ async function main() {
         "Keep the current source tree in place during the initial retrofit."
       ];
     }
-    retrofitFollowUpItems = retrofitDepth === "overlay-and-restructure"
-      ? [
-          "Promote the most stable app boundaries into a clearer top-level layout such as `apps/` and `packages/` where justified.",
-          "Move scattered durable docs into `docs/context/`, `docs/engineering/`, and `docs/product/` once ownership is clear.",
-          "Reduce ambiguous module roots by introducing clearer domain ownership and task records under `docs/tasks/`."
-        ]
-      : [
-          "Keep this first retrofit documentation-only and use it to validate canonical ownership before moving code.",
-          "If repeated work still causes confusion, plan a second pass to consolidate source roots and shared packages.",
-          "Promote durable legacy notes into canonical docs only after the team confirms they are still accurate."
-        ];
+    retrofitFollowUpItems = [
+      "Keep this retrofit limited to bootstrap files, canonical docs, and project-structure mapping.",
+      "If repeated work still causes confusion, propose a separate, explicit code-refactor effort instead of treating it as part of this skill.",
+      "Promote durable legacy notes into canonical docs only after the team confirms they are still accurate."
+    ];
   } else {
     if (!args.root || !args.name || !args.shape) {
       throw new Error(usage.trim());

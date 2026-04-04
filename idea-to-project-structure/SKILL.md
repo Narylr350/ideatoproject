@@ -101,7 +101,7 @@ For `structure-only`, ask only what changes structure.
 
 For `full-docs`, switch to a fuller requirement discussion inspired by `product-requirements`, but stop short of producing a giant PRD unless the user explicitly wants one.
 
-For `retrofit-existing-project`, explore the current repository first, then ask only the questions needed to decide how invasive the retrofit should be.
+For `retrofit-existing-project`, explore the current repository first, then ask only the questions needed to decide how the project structure and bootstrap/docs layer should be overlaid.
 
 In `full-docs`, gather enough detail to write:
 
@@ -115,7 +115,7 @@ In `full-docs`, gather enough detail to write:
 In `retrofit-existing-project`, gather enough detail to decide:
 
 - current app and module boundaries
-- whether the retrofit is `overlay-only` or `overlay-and-restructure`
+- whether the retrofit should remain a conservative structure overlay
 - which existing docs are canonical, obsolete, or missing
 - what the new bootstrap chain should point to
 
@@ -186,9 +186,8 @@ Use this fixed decision checklist for `retrofit-existing-project`:
    - `docs/context/project-overview.md`
 
 3. `改造深度`
-   Ask whether the user wants:
-   - `overlay-only`: add AI-friendly docs and bootstrap files without moving code
-   - `overlay-and-restructure`: add the docs layer and also perform limited structural cleanup
+   Ask whether the user wants a conservative structure overlay:
+   - `overlay-only`: add AI-friendly docs and bootstrap files without moving code or refactoring application code
    Write mainly into:
    - `docs/context/architecture.md`
    - `docs/tasks/`
@@ -208,7 +207,7 @@ Use this fixed decision checklist for `retrofit-existing-project`:
    - `docs/context/project-overview.md`
    - `docs/context/architecture.md`
 
-Default to `overlay-only` unless the user explicitly wants structural cleanup beyond documentation and bootstrap layering.
+Default to `overlay-only`. `retrofit-existing-project` is limited to project-structure retrofit: bootstrap files, canonical docs, project-level structure mapping, and task-state conventions. It must not present itself as a source refactor or project refactor workflow.
 
 Ask only the questions needed to decide structure. Prefer 1-2 questions at a time. Stop once the structure is defensible.
 
@@ -227,7 +226,6 @@ Minimum information to collect:
 Additional information for `retrofit-existing-project` mode:
 
 - current repo root or app roots
-- whether code movement is allowed
 - whether the project already has canonical docs worth preserving
 - whether existing `AGENTS.md` / `CLAUDE.md` should be kept, appended to, or overwritten
 - whether task/module tracking should start now or later
@@ -309,7 +307,6 @@ Use these shape defaults:
 Use these retrofit defaults:
 
 - `overlay-only`: add the AI-friendly docs and bootstrap layer without moving source directories
-- `overlay-and-restructure`: add the docs/bootstrap layer and perform limited approved structural cleanup
 
 ### 3. Present The Recommendation First
 
@@ -384,13 +381,14 @@ In `retrofit-existing-project` mode:
 - do not move code directories by default
 - add the bootstrap chain and canonical docs layer first
 - if `AGENTS.md` or `CLAUDE.md` already exist, confirm whether they should be `keep`, `append`, or `overwrite` before writing
-- only perform structural cleanup after presenting the mapping and getting user approval for invasive changes
+- keep the retrofit limited to structure/bootstrap/docs work rather than source-code refactors
 
 If the user chooses `using-superpowers` for complex execution:
 
 - confirm that the environment has the skill available
 - if not, help install it before relying on it, using the local skill installation workflow instead of only describing it
 - still keep repository-local artifact mapping rules so generic outputs land in canonical repo paths
+- treat superpowers as execution discipline only; do not imitate its document tree or recreate `docs/superpowers/**`
 
 If the user chooses repo-native execution instead:
 
@@ -451,6 +449,7 @@ Do not copy LoopNova's specific apps, modules, or domain names unless the user's
 - In `retrofit-existing-project` mode, default to leaving existing `AGENTS.md` and `CLAUDE.md` untouched unless the user explicitly chooses append or overwrite behavior.
 - For `retrofit-existing-project`, use `--instruction-file-mode skip|append|overwrite` to control how existing `AGENTS.md` and `CLAUDE.md` are handled.
 - Use `--execution-workflow superpowers|repo-native` to control the complex-task execution model written into the generated docs.
+- For `retrofit-existing-project`, use `--retrofit-depth overlay-only`. This mode does not include source refactors.
 - The generated repository should use `docs/tasks/<module>/INDEX.md` as the module task-state files and require writeback after each completed task.
 - Prefer task decomposition that keeps work inside one module. Only update multiple module indexes when the task genuinely crosses those boundaries.
 - If the user only wants planning output, do not run the script.

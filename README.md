@@ -58,7 +58,6 @@
 当前支持：
 
 - `overlay-only`
-- `overlay-and-restructure` 的前置映射与准备
 
 retrofit 时会优先生成：
 
@@ -128,6 +127,12 @@ retrofit 时会优先生成：
 
 如果用户选择 `superpowers`，复杂编码任务可以使用 `using-superpowers`，但输出仍然必须映射回当前仓库的 canonical 路径，不能创建通用的 `docs/superpowers/**`。
 
+这里的设计目标是把它的执行纪律内化进仓库，而不是模仿它的文档体系。也就是说：
+
+- `superpowers` 是可选执行增强，不是项目文档模板
+- 项目自己的 `docs/context/`、`docs/engineering/`、`docs/tasks/<module>/INDEX.md` 才是主结构
+- 即使启用 `superpowers`，也只吸收其复杂任务执行纪律，不复刻它的目录组织
+
 这样即使不依赖外部 skill，也能让项目在后续 AI 会话中持续可管理。
 
 这个工作流里最关键的低成本上下文文件不是某个总 README，而是各模块自己的：
@@ -161,7 +166,7 @@ ideatoproject/
 - `SKILL.md`
   skill 的主说明与工作流定义
 - `scripts/init-project-structure.mjs`
-  负责创建新项目结构或对旧项目执行 retrofit
+ 负责创建新项目结构或对旧项目叠加 structure/bootstrap/docs retrofit
 - `assets/templates/docs/`
   文档模板集合
 - `assets/templates/shapes/manifest.json`
@@ -266,7 +271,7 @@ node idea-to-project-structure/scripts/init-project-structure.mjs \
 - AI 启动链必须明确，避免每次新对话重新扫描整个仓库
 - 仓库本地结构优先于通用 workflow 默认结构
 - 对复杂任务的管理方式必须可配置：`superpowers` 或 `repo-native`
-- 老项目改造默认保守，不默认重构源码目录
+- 老项目 retrofit 只处理项目结构、bootstrap 层和文档层，不包含项目代码重构
 
 ## 许可证
 

@@ -192,7 +192,7 @@ ideatoproject/
 ### 1. 克隆仓库
 
 ```bash
-git clone <https://github.com/Narylr350/ideatoproject.git>
+git clone https://github.com/Narylr350/ideatoproject.git
 cd ideatoproject
 ```
 

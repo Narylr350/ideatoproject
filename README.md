@@ -47,9 +47,11 @@
 - `docs/context/project-overview.md`
 - `docs/context/architecture.md`
 - `docs/context/tech-stack.md`
-- `docs/context/development-roadmap.md`（按需）
+- `docs/context/development-roadmap.md`
 - `docs/product/idea.md`
-- `docs/engineering/api.md`（按需）
+- `docs/engineering/api.md`
+
+其中 `development-roadmap.md` 和 `api.md` 是否写实，取决于项目是否真的需要路线规划或独立 API 边界；不会为了“完整”而机械填满。
 
 ### 3. 旧项目 Retrofit
 
@@ -157,6 +159,10 @@ ideatoproject/
    │  └─ templates/
    │     ├─ docs/
    │     └─ shapes/
+   ├─ references/
+   │  ├─ full-docs-mode.md
+   │  ├─ retrofit-mode.md
+   │  └─ shape-and-stack-guidance.md
    └─ scripts/
       └─ init-project-structure.mjs
 ```
@@ -166,11 +172,13 @@ ideatoproject/
 - `SKILL.md`
   skill 的主说明与工作流定义
 - `scripts/init-project-structure.mjs`
- 负责创建新项目结构或对旧项目叠加 structure/bootstrap/docs retrofit
+  负责创建新项目结构或对旧项目叠加 structure/bootstrap/docs retrofit
 - `assets/templates/docs/`
   文档模板集合
 - `assets/templates/shapes/manifest.json`
   结构形态定义
+- `references/`
+  只在需要时加载的补充说明，避免 `SKILL.md` 过大
 - `agents/openai.yaml`
   agent 接入配置
 
@@ -229,41 +237,6 @@ idea-to-project-structure
 
 如果你选择让项目支持 `superpowers` 工作流，还需要保证本机已安装对应 skill；如果没有，按照环境里的 skill 安装流程补齐即可。
 
-## 使用方式
-
-### 1. 作为 skill 使用
-
-当环境中可直接加载 skill 时，使用 `idea-to-project-structure` 即可进入这套流程。
-
-### 2. 直接调用脚本
-
-新建项目示例：
-
-```bash
-node idea-to-project-structure/scripts/init-project-structure.mjs \
-  --mode new \
-  --root "D:\\Projects" \
-  --name "Campus Skill Swap" \
-  --shape "monorepo-web-api-admin" \
-  --frontend "vue" \
-  --backend "spring-boot" \
-  --package-manager "pnpm" \
-  --execution-workflow "repo-native" \
-  --with-admin "true" \
-  --with-roadmap "true" \
-  --domains "auth,listing,order,admin"
-```
-
-旧项目 retrofit 示例：
-
-```bash
-node idea-to-project-structure/scripts/init-project-structure.mjs \
-  --mode retrofit \
-  --project-root "D:\\Projects\\legacy-app" \
-  --execution-workflow "repo-native" \
-  --instruction-file-mode "skip"
-```
-
 ## 设计原则
 
 - 不生成重型 PRD，除非用户明确需要
@@ -272,6 +245,7 @@ node idea-to-project-structure/scripts/init-project-structure.mjs \
 - 仓库本地结构优先于通用 workflow 默认结构
 - 对复杂任务的管理方式必须可配置：`superpowers` 或 `repo-native`
 - 老项目 retrofit 只处理项目结构、bootstrap 层和文档层，不包含项目代码重构
+- `SKILL.md` 保持入口化，长提纲和细节说明下沉到 `references/`
 
 ## 许可证
 

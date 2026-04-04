@@ -1,0 +1,56 @@
+# AGENTS.md
+
+## Bootstrap Rule
+
+For any non-trivial task, start with `AI_CONTEXT.md`.
+
+Do not try to understand the whole repository by scanning random files first. Use the bootstrap chain:
+
+1. `AGENTS.md`
+2. `AI_CONTEXT.md`
+3. `docs/context/project-overview.md`
+4. `docs/context/retrofit-mapping.md`{{retrofitReadNote}}
+5. `docs/context/development-roadmap.md`{{roadmapReadNote}}
+6. `docs/context/architecture.md`
+7. `docs/context/tech-stack.md`
+8. relevant files under `docs/engineering/`
+9. relevant files under `docs/tasks/`
+
+## Why This Exists
+
+This repository is organized to reduce token waste across repeated AI sessions.
+
+- `AGENTS.md` is the stable entrypoint.
+- `AI_CONTEXT.md` is the compressed whole-project index.
+- canonical detail is pushed into `docs/context/`, `docs/engineering/`, and `docs/tasks/`.
+
+## Project Notes
+
+- Project: `{{projectName}}`
+- Shape: `{{shape}}`
+- Execution workflow: `{{executionWorkflow}}`
+- Product goal: {{idea}}
+- Target users: {{targetUsers}}
+
+## Working Rule
+
+When structure, architecture, or domain ownership changes, update `AI_CONTEXT.md` and the affected canonical docs in the same change.
+
+## Repository Structure Priority
+
+- Repository-local structure and docs layout take priority over generic skill defaults.
+- If an external workflow suggests `docs/superpowers/**` or another generic artifact path, adapt it to this repository's canonical structure instead.
+- Use:
+  - `docs/context/` for stable context
+  - `docs/product/` for product intent
+  - `docs/engineering/` for technical contracts
+  - `docs/tasks/` for task and module records
+- Do not copy workflow habits from other repositories unless they are intentionally adopted here.
+
+## Superpowers Mapping
+
+{{superpowersArtifactMapping}}
+
+## Skill Routing
+
+{{skillRouting}}

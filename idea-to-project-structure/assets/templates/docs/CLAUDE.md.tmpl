@@ -1,0 +1,57 @@
+# CLAUDE.md
+
+## Bootstrap Rule
+
+For any non-trivial task, start with `AI_CONTEXT.md`.
+
+Use this reading chain:
+
+1. `CLAUDE.md`
+2. `AI_CONTEXT.md`
+3. `docs/context/project-overview.md`
+4. `docs/context/retrofit-mapping.md`{{retrofitReadNote}}
+5. `docs/context/development-roadmap.md`{{roadmapReadNote}}
+6. `docs/context/architecture.md`
+7. `docs/context/tech-stack.md`
+8. relevant files under `docs/engineering/`
+9. relevant files under `docs/tasks/`
+
+## Purpose
+
+This repository uses layered project context so a new AI conversation can recover the whole project meaning without scanning the whole repo.
+
+- `AI_CONTEXT.md` is the compressed bootstrap index.
+- `docs/context/` stores stable project meaning.
+- `docs/engineering/` stores technical contracts.
+- `docs/tasks/` stores module-local execution context.
+
+## Project Notes
+
+- Project: `{{projectName}}`
+- Shape: `{{shape}}`
+- Execution workflow: `{{executionWorkflow}}`
+- Product goal: {{idea}}
+- Core flow: {{coreFlow}}
+
+## Maintenance Rule
+
+When project structure or canonical project understanding changes, update `AI_CONTEXT.md` and the relevant context docs together.
+
+## Repository Structure Priority
+
+- Generic workflow tooling must adapt to this repository's structure, not the other way around.
+- Do not create generic skill artifact paths such as `docs/superpowers/**` when canonical repository paths already exist.
+- Use:
+  - `docs/context/` for stable project context
+  - `docs/product/` for product intent
+  - `docs/engineering/` for engineering contracts
+  - `docs/tasks/` for task and module records
+- Keep repository-level rules generic and intentional; do not inherit personal conventions from unrelated source repositories by accident.
+
+## Superpowers Mapping
+
+{{superpowersArtifactMapping}}
+
+## Skill Routing
+
+{{skillRouting}}

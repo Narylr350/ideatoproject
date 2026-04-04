@@ -1,0 +1,4 @@
+interface:
+  display_name: "Idea to Project Structure"
+  short_description: "Turn an idea into a project structure"
+  default_prompt: "Use $idea-to-project-structure to turn this idea into a practical project structure."

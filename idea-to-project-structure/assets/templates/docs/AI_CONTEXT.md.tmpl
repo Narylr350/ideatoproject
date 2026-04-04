@@ -1,0 +1,82 @@
+# AI_CONTEXT
+
+## Purpose
+
+This file is the mandatory bootstrap entry for the repository.
+
+It exists to reduce repeated full-project context gathering in new AI conversations. The root `AGENTS.md` and `CLAUDE.md` should route new sessions here first.
+
+This file should stay compressed: summarize the project and point to canonical documents instead of duplicating long-form detail.
+
+## Project
+
+`{{projectName}}` is currently structured as `{{shape}}`.
+
+Working product summary:
+
+- goal: {{idea}}
+- target users: {{targetUsers}}
+- core flow: {{coreFlow}}
+
+Active application roots:
+{{appBullets}}
+
+Primary domains:
+{{domainBullets}}
+
+## Required Reading Order
+
+For any non-trivial task, read in this order before implementation:
+
+1. `AI_CONTEXT.md`
+2. `docs/context/project-overview.md`
+3. `docs/context/retrofit-mapping.md`{{retrofitReadNote}}
+4. `docs/context/development-roadmap.md`{{roadmapReadNote}}
+5. `docs/context/architecture.md`
+6. `docs/context/tech-stack.md`
+7. relevant files under `docs/engineering/`
+8. relevant files under `docs/tasks/`
+
+## Canonical Ownership
+
+- product goal and active surfaces: `docs/context/project-overview.md`
+- legacy-to-canonical structure mapping: `docs/context/retrofit-mapping.md`{{retrofitOwnershipNote}}
+- target route and milestone phases: `docs/context/development-roadmap.md`{{roadmapOwnershipNote}}
+- structure and boundaries: `docs/context/architecture.md`
+- stack decisions and runtime baseline: `docs/context/tech-stack.md`
+- engineering contracts: `docs/engineering/`
+- module and work records: `docs/tasks/`
+
+## Why This Layering Exists
+
+- `AGENTS.md` / `CLAUDE.md` provide the universal entry rule.
+- `AI_CONTEXT.md` gives the shortest possible whole-project bootstrap.
+- `docs/context/` stores stable project meaning and structure.
+- `docs/engineering/` stores contracts that implementation work must follow.
+- `docs/tasks/` stores module-local working history and current notes.
+
+## Delivery Workflow
+
+{{deliveryWorkflow}}
+
+## Workflow Compatibility Rules
+
+{{workflowCompatibilityRules}}
+
+## Superpowers Artifact Mapping
+
+{{superpowersArtifactMapping}}
+
+## Constraint Scope
+
+- This repository should store repository-level workflow constraints only.
+- Do not import personal machine-specific preferences, branch habits, or source-repo-specific rules unless they are intentionally adopted into this repository.
+- If a future team wants extra local conventions, write them explicitly in this repository instead of inheriting them accidentally from another project.
+
+## Execution Expectations
+
+1. define scope
+2. confirm the target app or module
+3. make the smallest structure-aware change
+4. update affected docs if boundaries or contracts move
+5. leave the repository consistent for the next task

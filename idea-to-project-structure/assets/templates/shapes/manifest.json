@@ -1,0 +1,143 @@
+{
+  "shapes": {
+    "single-app": {
+      "description": "One main application root for simple products or fullstack starters.",
+      "apps": [
+        {
+          "id": "app",
+          "path": "app",
+          "label": "Main application"
+        }
+      ],
+      "packages": [],
+      "tools": [
+        "tools"
+      ],
+      "defaultWithAdmin": false,
+      "defaultWithWorker": false
+    },
+    "frontend-backend": {
+      "description": "Separate user-facing app and backend API with optional admin.",
+      "apps": [
+        {
+          "id": "web",
+          "path": "apps/web",
+          "label": "User-facing web app"
+        },
+        {
+          "id": "api",
+          "path": "apps/api",
+          "label": "Backend API"
+        }
+      ],
+      "optionalApps": [
+        {
+          "id": "admin",
+          "path": "apps/admin",
+          "label": "Admin app"
+        }
+      ],
+      "packages": [
+        "packages/shared"
+      ],
+      "tools": [
+        "tools"
+      ],
+      "defaultWithAdmin": false,
+      "defaultWithWorker": false
+    },
+    "monorepo-web-api-admin": {
+      "description": "Monorepo with user web, API, and admin apps plus shared packages.",
+      "apps": [
+        {
+          "id": "web",
+          "path": "apps/web",
+          "label": "User-facing web app"
+        },
+        {
+          "id": "api",
+          "path": "apps/api",
+          "label": "Backend API"
+        },
+        {
+          "id": "admin",
+          "path": "apps/admin",
+          "label": "Admin app"
+        }
+      ],
+      "packages": [
+        "packages/shared",
+        "packages/config"
+      ],
+      "tools": [
+        "tools"
+      ],
+      "defaultWithAdmin": true,
+      "defaultWithWorker": false
+    },
+    "mobile-api-admin": {
+      "description": "Mobile client backed by an API and admin surface.",
+      "apps": [
+        {
+          "id": "mobile",
+          "path": "apps/mobile",
+          "label": "Mobile client"
+        },
+        {
+          "id": "api",
+          "path": "apps/api",
+          "label": "Backend API"
+        },
+        {
+          "id": "admin",
+          "path": "apps/admin",
+          "label": "Admin app"
+        }
+      ],
+      "packages": [
+        "packages/shared"
+      ],
+      "tools": [
+        "tools"
+      ],
+      "defaultWithAdmin": true,
+      "defaultWithWorker": false
+    },
+    "ai-service-app": {
+      "description": "User app, API, and background worker for AI or async workloads.",
+      "apps": [
+        {
+          "id": "web",
+          "path": "apps/web",
+          "label": "User-facing app"
+        },
+        {
+          "id": "api",
+          "path": "apps/api",
+          "label": "Backend API"
+        },
+        {
+          "id": "worker",
+          "path": "apps/worker",
+          "label": "Worker service"
+        }
+      ],
+      "optionalApps": [
+        {
+          "id": "admin",
+          "path": "apps/admin",
+          "label": "Admin app"
+        }
+      ],
+      "packages": [
+        "packages/shared",
+        "packages/prompts"
+      ],
+      "tools": [
+        "tools"
+      ],
+      "defaultWithAdmin": false,
+      "defaultWithWorker": true
+    }
+  }
+}

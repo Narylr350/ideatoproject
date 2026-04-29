@@ -10,6 +10,31 @@ Gather enough information to generate structure and materially write the core do
 
 Do not treat execution workflow, stack choice, and target path as requirements discovery. Those are setup choices. Before scaffolding, ask at least one focused requirements batch unless the user has already answered the product/content questions below.
 
+For file creation, collect target root/path as its own checkpoint before final field-package approval. Do not wait until after approval if the path is missing, but also do not bundle path with workflow, stack, and MVP in one large question.
+
+## Stepwise Interview Rule
+
+Full-docs should move one checkpoint at a time. Do not ask for workflow, target path, stack, and MVP in the same message.
+
+Use this order when values are missing:
+
+1. Execution workflow: `repo-native` or `superpowers`.
+2. Target path and project name.
+3. Stack constraints or permission to recommend a stack.
+4. Product/MVP discovery.
+5. Complete full-docs field package approval.
+6. Scaffold.
+
+MVP is discovered progressively, not demanded as a single broad answer:
+
+1. What is the primary thing being managed or viewed?
+2. What is the first successful user action?
+3. What read-only operations must exist in v1?
+4. What operations must be explicitly blocked or out of scope?
+5. What signals prove v1 is useful?
+
+If the user says "按你的 MVP 推荐", use those answers and context to draft a recommended MVP package, then ask for approval.
+
 ## Adapted Requirements Core
 
 Use the useful part of `product-requirements`: systematic gap discovery and targeted clarification. Adapt it to this skill's own output model. Do not act as a Product Owner persona, do not generate a separate PRD by default, and do not force PRD sections into the repository. Map discovered requirements into the canonical docs that this skill owns.
@@ -27,15 +52,53 @@ Use this readiness gate before scaffolding:
 
 If any target doc would still be generic, ask 2-3 targeted questions for that doc area before scaffolding. If the user explicitly wants to move ahead with unresolved details, record those open questions in the generated docs instead of padding.
 
+## When The User Says "You Recommend"
+
+If the user asks the assistant to recommend missing details, treat that as permission to propose concrete values. Do not turn it into more open-ended questioning.
+
+Recommendation is not approval to scaffold. A message such as "按你的 MVP 推荐来", "你推荐", or "按你的建议" means the assistant should draft the full-docs field package. It does not mean the assistant may immediately create files.
+
+The recommended field package must include:
+
+- MVP scope
+- v1 non-goals
+- measurable success metrics
+- key workflows
+- integration/API boundary
+- testing strategy
+- risks
+- open questions
+- roadmap choice and milestones when useful
+- domains/modules
+- shape and stack
+- execution workflow
+- target path/name when known
+
+Present those values before scaffolding and ask for approval of the field package. After approval:
+
+- wait for explicit confirmation such as "确认", "批准", "按这个生成", or "可以落盘"
+- after explicit confirmation, if target path/name is known, run the scaffold script immediately
+- if target path/name is missing, ask only for that one setup value
+- do not re-open MVP/non-goal/stack questions unless the user changes the scope
+
+The recommendation should be written in the current skill's language: "these values will be written into `project-overview.md`, `idea.md`, `architecture.md`, `tech-stack.md`, `api.md`, `testing/README.md`, and module indexes." Do not frame it as a PRD.
+
 ## Required Interview Areas
 
 Ask in small batches. Two or three focused questions at a time is enough.
 
-Minimum first batch after setup choices:
+Minimum product discovery sequence after setup choices:
 
-1. What is the first useful MVP outcome?
-2. Which objects, workflows, integrations, or user actions must be supported first?
-3. What should the app deliberately not do in v1?
+1. Ask what object or workspace the user needs to manage first.
+2. Ask what the first successful action should be.
+3. Ask what must remain read-only or out of scope.
+
+If the user already gave a clear product idea but not a target path/name, ask only the next missing setup checkpoint. Do not bundle all setup choices:
+
+1. first ask execution workflow if missing
+2. then ask target root/path and project name
+3. then ask stack constraints or whether you should recommend
+4. then start product/MVP discovery or propose a recommended package if the user asked you to recommend
 
 1. `产品目标`
    Clarify the problem, target users, and core value.

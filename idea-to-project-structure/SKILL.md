@@ -136,6 +136,32 @@ For `full-docs`, confirming execution workflow, tech stack, and whether to creat
 4. Do not use PRD-only artifacts, persona theater, or a generic requirements document unless the user asks for those explicitly.
 5. Do not run the script until product goal, target users, core flow, MVP scope, non-goals, success metrics, key workflows, testing strategy, and API/integration boundaries are known or explicitly marked as open questions.
 
+Full-docs should proceed one checkpoint at a time:
+
+- Do not ask for workflow, target path, stack, and MVP in the same message.
+- Prefer this order when values are missing: execution workflow -> target path/project name -> stack constraints or recommendation -> product/MVP discovery -> field package approval -> scaffold.
+- Each message should ask for the next missing decision, or present the next recommendation checkpoint for approval.
+- Avoid answer templates that encourage the user to provide all remaining decisions in one sentence.
+- MVP should be discovered progressively from concrete use: first identify the primary object being managed, then the first successful user action, then required read-only operations, then explicit non-goals.
+- If the user says "按你的 MVP 推荐", propose the MVP field package for approval; do not treat that sentence as the user's final MVP definition.
+
+Full-docs has a recommendation path:
+
+- If the user says "你推荐", "帮我推荐", "按你的建议", or gives equivalent permission for missing product details, do not ask those details again one by one.
+- Instead, propose a complete full-docs field package covering `--mvp`, `--non-goals`, `--success-metrics`, `--key-workflows`, `--integrations`, `--testing-strategy`, `--api-scope`, `--risks`, `--open-questions`, roadmap choice, domains, shape, and stack.
+- The recommendation must be concrete enough to write the target markdown files. Avoid vague lines such as "后续补充测试策略" unless they are intentionally listed under `--open-questions`.
+- `按你的推荐` 不等于批准落盘. It only authorizes the assistant to draft recommended values.
+- Ask the user for explicit confirmation of the whole field package, not just the directory tree. Accept clear confirmations such as "确认", "批准", "按这个生成", or "可以落盘".
+- If the user explicitly confirms the field package and the target path is already known, run the scaffold script in the same turn.
+- If the target path is missing, ask only for the target root/path; do not restart requirements discovery.
+- Ask for target project name/path in the initial setup batch whenever the user has already selected `full-docs`, so approval is not followed by an avoidable extra path question.
+
+Do not confuse two workflows:
+
+- The selected generated-repository execution workflow (`superpowers` or `repo-native`) is content that will be written into the generated docs.
+- It is not, by itself, permission to replace this skill's full-docs readiness flow with a generic brainstorming or PRD workflow.
+- If the local agent environment requires process skills, keep their output mapped into this skill's canonical recommendation and generated docs; do not create generic workflow artifacts.
+
 Load extra guidance only when needed:
 
 - `references/full-docs-mode.md`
@@ -159,6 +185,8 @@ Convert the discussion into:
 - `with_roadmap`
 - `milestones`
 - `existing_canonical_docs`
+- `full_docs_fields` when mode is `full-docs`: MVP, non-goals, success metrics, key workflows, integrations, testing strategy, API scope, risks, open questions
+- `target_root` and `project_name` when files will be created
 
 Supported shapes are defined in `assets/templates/shapes/manifest.json`.
 
@@ -177,15 +205,17 @@ Before scaffolding, present a concise proposal in this format:
 
 Add only when relevant:
 
-- for `full-docs`: `目标路线与阶段`, `MVP 与非目标`, `复杂任务执行方式`
+- for `full-docs`: `目标路线与阶段`, `MVP 与非目标`, `成功指标`, `核心流程`, `集成/API 边界`, `测试策略`, `风险与开放问题`, `复杂任务执行方式`, `落盘位置`
 - for `retrofit-existing-project`: `当前结构诊断`, `改造方式`, `保留与新增`, `复杂任务执行方式`
+
+For `full-docs`, the recommendation is not complete unless it can be directly translated into the script flags listed below. If the user asked you to recommend missing pieces, include your recommended values explicitly.
 
 ### 6. Scaffold Only When The User Wants Files
 
 Run the bundled script when the selected mode implies files should be created:
 
 - `structure-only`: run it only after the user asks to create files or approves scaffolding.
-- `full-docs`: treat the mode itself as permission to create the scaffold and write the core docs, unless the user explicitly says "只输出文档", "只给内容", "不要落盘", or "先不要创建文件".
+- `full-docs`: treat the mode itself as intent to eventually create the scaffold and write core docs, unless the user explicitly says "只输出文档", "只给内容", "不要落盘", or "先不要创建文件". Still require explicit confirmation of the full-docs field package before running the script.
 - `retrofit-existing-project`: treat the mode itself as permission to add the bootstrap/docs overlay to the named or current repository, while preserving source code and existing instruction files according to the chosen mode.
 
 Do not ask a `full-docs` user whether they want "only output docs" versus "create project skeleton and docs". They already selected the docs-writing mode. Instead, ask only for missing decisions that affect the generated docs and target path/name when needed.

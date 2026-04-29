@@ -10,6 +10,7 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const __filename = fileURLToPath(import.meta.url);
 const scriptPath = path.join(path.dirname(__filename), "init-project-structure.mjs");
+const skillRoot = path.resolve(path.dirname(__filename), "..");
 
 test("full-docs mode writes gathered requirements into core docs", async () => {
   const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "itps-full-docs-"));
@@ -90,4 +91,22 @@ test("full-docs mode writes gathered requirements into core docs", async () => {
   } finally {
     await fsp.rm(tempRoot, { recursive: true, force: true });
   }
+});
+
+test("full-docs recommendation is not scaffold approval", async () => {
+  const skill = await fsp.readFile(path.join(skillRoot, "SKILL.md"), "utf8");
+  const fullDocsReference = await fsp.readFile(path.join(skillRoot, "references/full-docs-mode.md"), "utf8");
+
+  assert.match(skill, /按你的推荐.*不等于.*批准.*落盘/s);
+  assert.match(skill, /explicit confirmation/i);
+  assert.match(fullDocsReference, /recommendation.*not.*approval.*scaffold/i);
+});
+
+test("full-docs interview stays stepwise", async () => {
+  const skill = await fsp.readFile(path.join(skillRoot, "SKILL.md"), "utf8");
+  const fullDocsReference = await fsp.readFile(path.join(skillRoot, "references/full-docs-mode.md"), "utf8");
+
+  assert.match(skill, /one checkpoint at a time/i);
+  assert.match(skill, /Do not ask.*workflow.*target.*stack.*MVP.*same message/s);
+  assert.match(fullDocsReference, /MVP.*discovered progressively/i);
 });

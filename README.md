@@ -56,6 +56,10 @@
 
 脚本侧的 `--docs-mode full-docs` 会接收并写入 `--mvp`、`--non-goals`、`--success-metrics`、`--key-workflows`、`--integrations`、`--testing-strategy`、`--api-scope`、`--risks`、`--open-questions` 等字段，避免只生成 TODO 占位文档。
 
+如果用户对某些范围说“你推荐”，完整文档模式应直接给出一组可落盘的推荐字段包，而不是继续追问同一类问题。但“按你的推荐”只表示授权推荐，不等于批准落盘；必须等用户明确确认这组字段包后，才可以创建结构和核心文档。如果只缺路径，只问路径，不重新做需求访谈。
+
+完整文档模式的访谈应按 checkpoint 逐步推进，不要一次性把 workflow、路径、技术栈和 MVP 全部丢给用户填写。MVP 应从管理对象、首次成功动作、只读操作边界、明确非目标和成功信号逐步收敛出来。
+
 ### 3. 旧项目 Retrofit
 
 支持对已有仓库叠加一层 AI 友好的 bootstrap/docs 结构，而不默认搬动源码目录。

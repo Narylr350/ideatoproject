@@ -122,6 +122,7 @@ retrofit 时会优先生成：
 - superpowers skill 可以按本地环境规则正常加载
 - 项目文档结构仍然由仓库自己的 `AGENTS.md -> AI_CONTEXT.md -> docs/*` 接管
 - superpowers 产生的设计、计划、验证记录和任务状态必须映射回仓库 canonical 路径
+- 它和 `repo-native` 一样保留仓库内长期文档；区别只是执行过程允许 superpowers workflow skill 介入
 
 **选择 `repo-native` 时**
 
@@ -134,6 +135,8 @@ retrofit 时会优先生成：
   - 可选 `development-roadmap.md`
 
 如果用户选择 `superpowers`，不要规定它只能在某类任务里触发；只规定输出必须映射回当前仓库自己的 canonical 路径，不能创建通用的 `docs/superpowers/**`。
+
+不要把 `superpowers` 解释成“文档不跟仓库走”。两种选择的长期记忆都在仓库里；区别是 `superpowers` 会使用本机已安装的 workflow skill 来约束执行过程。
 
 如果用户选择 `repo-native`，则相反：项目文档会明确 opt out，不使用 `using-superpowers`、`brainstorming`、`writing-plans` 等 superpowers workflow skill，避免轻量项目被额外流程拖重。
 

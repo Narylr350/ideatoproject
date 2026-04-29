@@ -89,10 +89,18 @@ Before finalizing any new scaffold, full-docs output, or retrofit, ask whether p
 
 Guidance:
 
-- choose based on whether the repository should depend on local superpowers skills for execution workflow support
+- explain that both choices keep durable project context in repository docs
+- choose based on whether the repository should allow local superpowers skills to guide execution workflow
 - never infer the answer from whether superpowers is installed locally
 - if the user chooses `repo-native`, generated `AGENTS.md`, `CLAUDE.md`, and `AI_CONTEXT.md` must opt out of superpowers workflows even when the local machine has superpowers installed
 - if the user chooses `superpowers` and it is missing, help install it before relying on it
+
+When asking, use this distinction:
+
+- `repo-native`: lightweight execution; do not use superpowers workflow skills; keep plans, validation, and state in repository docs.
+- `superpowers`: allow superpowers workflow skills for execution discipline; still keep plans, validation, and durable state in repository docs.
+
+Do not describe `superpowers` as taking documentation out of the repository or making project memory less portable. The tradeoff is workflow weight and local skill dependency, not documentation ownership.
 
 ### 3. Clarify Only What Changes Structure
 

@@ -3,6 +3,7 @@ import { execFile } from "node:child_process";
 import fsp from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { promisify } from "node:util";
@@ -10,7 +11,60 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const __filename = fileURLToPath(import.meta.url);
 const scriptPath = path.join(path.dirname(__filename), "init-project-structure.mjs");
+const runnerPath = path.join(path.dirname(__filename), "lib", "runner.mjs");
+const workflowCopyPath = path.join(path.dirname(__filename), "lib", "workflow-copy.mjs");
+const newProjectModelPath = path.join(path.dirname(__filename), "lib", "new-project-model.mjs");
+const retrofitModelPath = path.join(path.dirname(__filename), "lib", "retrofit-model.mjs");
+const stackDetectionPath = path.join(path.dirname(__filename), "lib", "stack-detection.mjs");
+const projectDetectionPath = path.join(path.dirname(__filename), "lib", "project-detection.mjs");
+const workspaceFilesPath = path.join(path.dirname(__filename), "lib", "workspace-files.mjs");
 const skillRoot = path.resolve(path.dirname(__filename), "..");
+
+async function pathExists(targetPath) {
+  try {
+    await fsp.access(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+test("CLI implementation is split behind an importable runner", async () => {
+  const runner = await import(pathToFileURL(runnerPath));
+
+  assert.equal(typeof runner.runInitProjectStructure, "function");
+});
+
+test("workflow copy is isolated behind pure helpers", async () => {
+  const workflowCopy = await import(pathToFileURL(workflowCopyPath));
+
+  assert.equal(typeof workflowCopy.buildWorkflowCopy, "function");
+});
+
+test("new and retrofit scaffold model builders are isolated", async () => {
+  const newProjectModel = await import(pathToFileURL(newProjectModelPath));
+  const retrofitModel = await import(pathToFileURL(retrofitModelPath));
+
+  assert.equal(typeof newProjectModel.buildNewProjectModel, "function");
+  assert.equal(typeof retrofitModel.buildRetrofitModel, "function");
+});
+
+test("retrofit detection helpers are split by concern", async () => {
+  const stackDetection = await import(pathToFileURL(stackDetectionPath));
+  const projectDetection = await import(pathToFileURL(projectDetectionPath));
+
+  assert.equal(typeof stackDetection.detectPackageManager, "function");
+  assert.equal(typeof stackDetection.detectStacks, "function");
+  assert.equal(typeof projectDetection.detectProjectApps, "function");
+  assert.equal(typeof projectDetection.detectDomains, "function");
+  assert.equal(typeof projectDetection.detectCanonicalDocs, "function");
+});
+
+test("workspace special files are isolated from template writer", async () => {
+  const workspaceFiles = await import(pathToFileURL(workspaceFilesPath));
+
+  assert.equal(typeof workspaceFiles.writeWorkspaceFile, "function");
+});
 
 test("full-docs mode writes gathered requirements into core docs", async () => {
   const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "itps-full-docs-"));
@@ -93,6 +147,82 @@ test("full-docs mode writes gathered requirements into core docs", async () => {
   }
 });
 
+test("new project dry-run prints scaffold plan without creating files", async () => {
+  const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "itps-dry-run-new-"));
+  try {
+    const { stdout } = await execFileAsync(process.execPath, [
+      scriptPath,
+      "--mode",
+      "new",
+      "--root",
+      tempRoot,
+      "--name",
+      "Dry Run Shop",
+      "--shape",
+      "single-app",
+      "--execution-workflow",
+      "repo-native",
+      "--docs-mode",
+      "none",
+      "--dry-run"
+    ]);
+
+    const plan = JSON.parse(stdout);
+    assert.equal(plan.mode, "new");
+    assert.equal(plan.shape, "single-app");
+    assert.deepEqual(plan.apps, ["app"]);
+    assert.match(plan.projectRoot, /dry-run-shop$/);
+    assert.ok(plan.files.includes("AGENTS.md"));
+    assert.ok(plan.files.includes("README.md"));
+    assert.equal(await pathExists(path.join(tempRoot, "dry-run-shop")), false);
+  } finally {
+    await fsp.rm(tempRoot, { recursive: true, force: true });
+  }
+});
+
+test("retrofit dry-run detects existing app roots and canonical docs", async () => {
+  const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "itps-dry-run-retrofit-"));
+  try {
+    await fsp.mkdir(path.join(tempRoot, "apps", "web"), { recursive: true });
+    await fsp.mkdir(path.join(tempRoot, "apps", "api"), { recursive: true });
+    await fsp.mkdir(path.join(tempRoot, "docs", "context"), { recursive: true });
+    await fsp.writeFile(path.join(tempRoot, "README.md"), "# Existing App\n\nExisting summary.\n", "utf8");
+    await fsp.writeFile(
+      path.join(tempRoot, "apps", "web", "package.json"),
+      JSON.stringify({ dependencies: { react: "latest" } }),
+      "utf8"
+    );
+    await fsp.writeFile(
+      path.join(tempRoot, "apps", "api", "package.json"),
+      JSON.stringify({ dependencies: { express: "latest" } }),
+      "utf8"
+    );
+
+    const { stdout } = await execFileAsync(process.execPath, [
+      scriptPath,
+      "--mode",
+      "retrofit",
+      "--project-root",
+      tempRoot,
+      "--execution-workflow",
+      "repo-native",
+      "--docs-mode",
+      "none",
+      "--dry-run"
+    ]);
+
+    const plan = JSON.parse(stdout);
+    assert.equal(plan.mode, "retrofit");
+    assert.equal(plan.shape, "frontend-backend");
+    assert.deepEqual([...plan.apps].sort(), ["apps/api", "apps/web"]);
+    assert.deepEqual(plan.canonicalDocs, ["README.md"]);
+    assert.ok(plan.files.includes("docs/context/retrofit-mapping.md"));
+    assert.ok(plan.notes.some((note) => note.includes("Existing canonical docs detected: README.md")));
+  } finally {
+    await fsp.rm(tempRoot, { recursive: true, force: true });
+  }
+});
+
 test("full-docs recommendation is not scaffold approval", async () => {
   const skill = await fsp.readFile(path.join(skillRoot, "SKILL.md"), "utf8");
   const fullDocsReference = await fsp.readFile(path.join(skillRoot, "references/full-docs-mode.md"), "utf8");
@@ -109,4 +239,12 @@ test("full-docs interview stays stepwise", async () => {
   assert.match(skill, /one checkpoint at a time/i);
   assert.match(skill, /Do not ask.*workflow.*target.*stack.*MVP.*same message/s);
   assert.match(fullDocsReference, /MVP.*discovered progressively/i);
+});
+
+test("skill documents how agents should use the bundled script", async () => {
+  const skill = await fsp.readFile(path.join(skillRoot, "SKILL.md"), "utf8");
+
+  assert.match(skill, /scripts\/init-project-structure\.mjs/);
+  assert.match(skill, /Do not hand-write generated scaffold files/i);
+  assert.match(skill, /scripts\/README\.md/);
 });

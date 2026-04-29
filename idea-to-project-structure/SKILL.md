@@ -222,9 +222,21 @@ Do not ask a `full-docs` user whether they want "only output docs" versus "creat
 
 Do not run the script immediately after the user answers only execution workflow, stack, and target-path choices. For `full-docs`, first gather the minimum content needed to write meaningful docs.
 
+When scaffolding is approved, use the bundled generator instead of recreating files by hand. Do not hand-write generated scaffold files, module indexes, or canonical docs when the script can produce them from the approved field package.
+
+Run the script from the skill root directory:
+
 ```bash
 node scripts/init-project-structure.mjs ...
 ```
+
+For repository-root usage, call the same file with its full relative path:
+
+```bash
+node idea-to-project-structure/scripts/init-project-structure.mjs ...
+```
+
+Use `--dry-run` when you need to inspect the planned directories/files before writing. The script implementation and maintenance boundaries are documented in `scripts/README.md`.
 
 Script responsibilities:
 

@@ -7,9 +7,9 @@
 你可以这样说：
 
 ```text
-idea-to-project-structure 我需要一个 Windows 软件，用来管理多个软件项目目录。
-比如单片机烧录软件、3D 软件、嘉立创软件的项目，我经常要查看这些目录，来回切换很麻烦。
-这个软件只用于查看文件。完整文档模式。
+idea-to-project-structure 我想做一个给小门店用的库存管理系统。
+现在商品入库、出库、盘点都记在 Excel 和微信群里，月底对账经常找不到记录，也不知道哪些商品快缺货。
+第一版先支持商品档案、入库出库记录、库存预警和操作员后台。完整文档模式。
 ```
 
 这个 skill 不会直接写代码，也不会一上来生成冗长 PRD。它会先帮你把需求收敛成：
@@ -60,14 +60,19 @@ idea-to-project-structure 对 D:\Projects\my-old-app 做 retrofit，只叠加 AG
 
 ## 验证范围
 
-这个 skill 目前没有系统测试过所有 AI 工具和模型组合。
+这个 skill 目前没有系统测试过所有 AI 工具和模型组合。下面的结论分成两层看：
 
-已实际测试过的组合：
+skill 本身，也就是触发、访谈和生成结构/文档这部分：
+
+- Codex + GPT 系列：表现良好，符合预期。
+- Claude Code + GPT 系列：已有少量测试，基本可用，但没有作为主要支持环境验证。
+
+由这个 skill 生成出来的后续项目工作流，也就是新仓库里的 `AGENTS.md` / `CLAUDE.md` / `AI_CONTEXT.md` / `docs/*` 如何约束后续开发会话：
 
 - Codex + GPT 系列：表现良好，符合预期。
 - Claude Code + GPT 系列：表现很差，几乎不可用。
 
-因此，当前 README 和 skill 说明默认以 Codex 环境为主要使用场景。其他 AI 工具或模型组合可以自行尝试，但不保证能稳定遵循完整文档模式、逐步 checkpoint 和确认后落盘等关键流程。
+因此，当前 README 和 skill 说明默认以 Codex 环境为主要使用场景。其他 AI 工具或模型组合可以自行尝试，但不保证能稳定遵循生成仓库里的完整文档模式、逐步 checkpoint、确认后落盘和 repo-native / superpowers 工作流约束。
 
 ## 安装
 
@@ -279,8 +284,26 @@ ideatoproject/
    │  ├─ retrofit-mode.md
    │  └─ shape-and-stack-guidance.md
    └─ scripts/
+      ├─ README.md
       ├─ init-project-structure.mjs
-      └─ init-project-structure.test.mjs
+      ├─ init-project-structure.test.mjs
+      └─ lib/
+         ├─ args.mjs
+         ├─ constants.mjs
+         ├─ discovery.mjs
+         ├─ docs-layer.mjs
+         ├─ formatters.mjs
+         ├─ fs-utils.mjs
+         ├─ new-project-model.mjs
+         ├─ project-detection.mjs
+         ├─ retrofit-model.mjs
+         ├─ runner.mjs
+         ├─ scaffold-model.mjs
+         ├─ stack-detection.mjs
+         ├─ template-model.mjs
+         ├─ workflow-copy.mjs
+         ├─ workspace-files.mjs
+         └─ writer.mjs
 ```
 
 ## 适合与不适合

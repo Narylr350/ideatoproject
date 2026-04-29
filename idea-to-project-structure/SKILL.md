@@ -72,13 +72,13 @@ Choose one mode first:
 - `full-docs`: structure plus materially written core docs
 - `retrofit-existing-project`: layer AI-friendly bootstrap/docs onto an existing repository
 
-Hard mode triggers:
+Mode triggers:
 
-- `structure-only`: default when the user asks for a project structure, repo layout, scaffold, module boundaries, tech-stack recommendation, or an idea-to-structure pass.
-- `full-docs`: use only when the user explicitly says `full-docs`, "完整文档", "核心文档一起生成", "结构和文档一起落盘", or asks to create/fill the docs now.
-- `retrofit-existing-project`: use only when the user explicitly says `retrofit`, `retrofit-existing-project`, "旧项目改造", "现有仓库", "当前仓库", "重构这个仓库", or provides an existing project path to add an AI-friendly docs/bootstrap layer.
+- `structure-only`: default when the user invokes this skill and does not name another mode.
+- `full-docs`: use when the user says `full-docs`, "完整文档", "完整文档模式", "核心文档一起生成", or "结构和文档一起落盘".
+- `retrofit-existing-project`: use when the user says `retrofit`, `retrofit-existing-project`, "重构仓库", "重构这个仓库", "旧项目改造", "现有仓库", "当前仓库", or provides an existing project path to add an AI-friendly docs/bootstrap layer.
 
-Do not infer a heavier mode from ambition, complexity, or what you think the user probably wants. If the mode is unclear, choose `structure-only` and ask before creating files.
+Do not infer `full-docs` from ambition, complexity, or what you think the user probably wants. If no mode is named, use `structure-only`.
 
 ### 2. Confirm Complex-Task Workflow
 

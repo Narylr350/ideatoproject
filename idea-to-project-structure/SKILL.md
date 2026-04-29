@@ -47,6 +47,12 @@ Treat `superpowers` as optional execution discipline only:
 
 For old repositories, retrofit mode is limited to project structure, bootstrap files, canonical docs, and mapping docs. It does not include source refactors or behavior changes.
 
+## Capability Contract
+
+- `structure-only`: start from an idea, ask lightweight structure-changing questions, then produce a suitable project skeleton.
+- `full-docs`: produce structure plus core docs in the repository. Fill docs dynamically from the user's needs; do not mechanically fill roadmap or API docs when the project does not need those boundaries.
+- `retrofit-existing-project`: add an AI-friendly bootstrap/docs layer to an existing repository without moving source code by default.
+
 ## Use This Skill When
 
 - The user has a product idea and wants repo structure, app layout, or module boundaries.

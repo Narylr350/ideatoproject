@@ -17,7 +17,7 @@ Ask in small batches. Two or three focused questions at a time is enough.
 Minimum first batch after setup choices:
 
 1. What is the first useful MVP outcome?
-2. Which project/file types must be recognized first?
+2. Which objects, workflows, integrations, or user actions must be supported first?
 3. What should the app deliberately not do in v1?
 
 1. `产品目标`

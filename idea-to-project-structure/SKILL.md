@@ -168,7 +168,13 @@ Add only when relevant:
 
 ### 6. Scaffold Only When The User Wants Files
 
-Run the bundled script only when the user wants files created:
+Run the bundled script when the selected mode implies files should be created:
+
+- `structure-only`: run it only after the user asks to create files or approves scaffolding.
+- `full-docs`: treat the mode itself as permission to create the scaffold and write the core docs, unless the user explicitly says "只输出文档", "只给内容", "不要落盘", or "先不要创建文件".
+- `retrofit-existing-project`: treat the mode itself as permission to add the bootstrap/docs overlay to the named or current repository, while preserving source code and existing instruction files according to the chosen mode.
+
+Do not ask a `full-docs` user whether they want "only output docs" versus "create project skeleton and docs". They already selected the docs-writing mode. Instead, ask only for missing decisions that affect the generated docs and target path/name when needed.
 
 ```bash
 node scripts/init-project-structure.mjs ...

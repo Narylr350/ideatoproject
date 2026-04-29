@@ -6,6 +6,8 @@ Use this reference only when the user chooses `full-docs`.
 
 Gather enough information to generate structure and materially write the core docs in one pass, without drifting into a giant PRD.
 
+`full-docs` means the user wants generated docs, not just a structure discussion. Do not ask whether to "only output docs" or "create skeleton and docs" after this mode is selected. Ask for the target path/name only if files will be created and the path/name is missing.
+
 ## Required Interview Areas
 
 Ask in small batches. Two or three focused questions at a time is enough.
@@ -59,6 +61,7 @@ Write docs dynamically:
 - always write bootstrap and core context docs
 - write engineering/API docs deeply only when those boundaries exist
 - if a section is not yet settled, record confirmed decisions and open questions instead of padding
+- do not downgrade to `structure-only` or ask whether to create docs after the user has said `full-docs` / `完整文档模式`
 
 ## Example Prompts
 

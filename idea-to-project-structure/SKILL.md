@@ -119,8 +119,10 @@ Always collect the minimum defensible information:
 Mode-specific depth:
 
 - `structure-only`: ask only structure-changing questions
-- `full-docs`: also gather enough detail to write core docs
+- `full-docs`: gather enough product, workflow, MVP, non-goal, and integration detail to write core docs before running the script
 - `retrofit-existing-project`: inspect the repo first, then ask only what is needed for structure/bootstrap overlay decisions
+
+For `full-docs`, confirming execution workflow, tech stack, and whether to create files is not enough. Ask at least one focused requirements batch before scaffolding unless the user already supplied clear answers for product goal, target users, core flow, MVP scope, and non-goals.
 
 Load extra guidance only when needed:
 
@@ -175,6 +177,8 @@ Run the bundled script when the selected mode implies files should be created:
 - `retrofit-existing-project`: treat the mode itself as permission to add the bootstrap/docs overlay to the named or current repository, while preserving source code and existing instruction files according to the chosen mode.
 
 Do not ask a `full-docs` user whether they want "only output docs" versus "create project skeleton and docs". They already selected the docs-writing mode. Instead, ask only for missing decisions that affect the generated docs and target path/name when needed.
+
+Do not run the script immediately after the user answers only execution workflow, stack, and target-path choices. For `full-docs`, first gather the minimum content needed to write meaningful docs.
 
 ```bash
 node scripts/init-project-structure.mjs ...

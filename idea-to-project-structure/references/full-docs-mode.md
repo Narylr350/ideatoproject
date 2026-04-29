@@ -8,9 +8,17 @@ Gather enough information to generate structure and materially write the core do
 
 `full-docs` means the user wants generated docs, not just a structure discussion. Do not ask whether to "only output docs" or "create skeleton and docs" after this mode is selected. Ask for the target path/name only if files will be created and the path/name is missing.
 
+Do not treat execution workflow, stack choice, and target path as requirements discovery. Those are setup choices. Before scaffolding, ask at least one focused requirements batch unless the user has already answered the product/content questions below.
+
 ## Required Interview Areas
 
 Ask in small batches. Two or three focused questions at a time is enough.
+
+Minimum first batch after setup choices:
+
+1. What is the first useful MVP outcome?
+2. Which project/file types must be recognized first?
+3. What should the app deliberately not do in v1?
 
 1. `产品目标`
    Clarify the problem, target users, and core value.
@@ -62,6 +70,7 @@ Write docs dynamically:
 - write engineering/API docs deeply only when those boundaries exist
 - if a section is not yet settled, record confirmed decisions and open questions instead of padding
 - do not downgrade to `structure-only` or ask whether to create docs after the user has said `full-docs` / `完整文档模式`
+- do not run the scaffold script before asking at least one requirements batch, unless the initial user message already contains enough detail for product goal, target users, core flow, MVP scope, and non-goals
 
 ## Example Prompts
 

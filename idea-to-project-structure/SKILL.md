@@ -1,6 +1,6 @@
 ---
 name: idea-to-project-structure
-description: Use when a user has a rough product idea and wants a practical project structure, repo layout, or AI-friendly bootstrap/docs scaffold instead of a long PRD.
+description: Use when a user explicitly asks for project structure, repo layout, scaffolding, AI-friendly bootstrap/docs, full-docs output, or retrofit/restructure of an existing repository; Chinese triggers include 项目结构, 仓库结构, 脚手架, AI友好文档, 重构这个仓库. Do not trigger only because the user mentions a generic app or management software idea.
 ---
 
 # Idea to Project Structure
@@ -28,9 +28,19 @@ Treat module task-state as durable context:
 - keep single tasks inside one module whenever practical
 - if a task genuinely crosses modules, update every affected module index
 
+Treat `repo-native` as a real lightweight workflow, not just "no superpowers":
+
+- read `AI_CONTEXT.md` and affected module indexes before non-trivial work
+- define scope in `docs/tasks/<module>/` before implementation
+- validate with tests or documented manual checks
+- record cross-module validation evidence or gaps in `docs/testing/`
+- update affected module indexes before closing the task
+- update `docs/context/*` or `docs/engineering/*` only when durable meaning or contracts changed
+
 Treat `superpowers` as optional execution discipline only:
 
-- ask whether the user wants `superpowers` or `repo-native` for complex coding execution
+- always ask whether the user wants `superpowers` or `repo-native`; installed superpowers is not a reason to enable it automatically
+- if the user chooses `repo-native`, generate markdown that explicitly forbids superpowers workflows for that repository to keep it lightweight
 - if the user chooses `superpowers`, map outputs into repo-native canonical paths
 - do not recreate `docs/superpowers/**`
 - internalize useful execution discipline; do not imitate its document tree
@@ -43,12 +53,14 @@ For old repositories, retrofit mode is limited to project structure, bootstrap f
 - The user wants language or framework choices driven by requirements.
 - The user wants an AI-friendly bootstrap/doc skeleton.
 - The user wants to layer that skeleton onto an existing repository.
+- The user says "重构这个仓库" or "改造当前仓库" in the sense of repository structure, bootstrap docs, or AI handoff docs.
 
 ## Do Not Use This Skill When
 
 - The user wants a long PRD as the primary deliverable.
 - The user wants implementation inside an existing codebase rather than structure work.
 - The user only wants a small feature added to an existing repository.
+- The user says "重构" but means code refactoring, behavior changes, performance work, or source cleanup rather than repository/docs structure. Ask once if the intent is ambiguous.
 
 ## Workflow
 
@@ -60,25 +72,26 @@ Choose one mode first:
 - `full-docs`: structure plus materially written core docs
 - `retrofit-existing-project`: layer AI-friendly bootstrap/docs onto an existing repository
 
-Defaults:
+Hard mode triggers:
 
-- prefer `structure-only` for simple ideas
-- use `full-docs` only when the user wants meaningful docs now
-- use `retrofit-existing-project` only when the repository already exists
+- `structure-only`: default when the user asks for a project structure, repo layout, scaffold, module boundaries, tech-stack recommendation, or an idea-to-structure pass.
+- `full-docs`: use only when the user explicitly says `full-docs`, "完整文档", "核心文档一起生成", "结构和文档一起落盘", or asks to create/fill the docs now.
+- `retrofit-existing-project`: use only when the user explicitly says `retrofit`, `retrofit-existing-project`, "旧项目改造", "现有仓库", "当前仓库", "重构这个仓库", or provides an existing project path to add an AI-friendly docs/bootstrap layer.
 
-Do not push simple ideas into `full-docs`.
+Do not infer a heavier mode from ambition, complexity, or what you think the user probably wants. If the mode is unclear, choose `structure-only` and ask before creating files.
 
 ### 2. Confirm Complex-Task Workflow
 
-Before finalizing structure, ask whether complex coding execution should use:
+Before finalizing any new scaffold, full-docs output, or retrofit, ask whether project execution workflow should use:
 
 - `superpowers`
 - `repo-native`
 
 Guidance:
 
-- choose `repo-native` for idea exploration, structure work, and lighter projects
-- choose `superpowers` for clearly execution-heavy coding work
+- choose based on whether the repository should depend on local superpowers skills for execution workflow support
+- never infer the answer from whether superpowers is installed locally
+- if the user chooses `repo-native`, generated `AGENTS.md`, `CLAUDE.md`, and `AI_CONTEXT.md` must opt out of superpowers workflows even when the local machine has superpowers installed
 - if the user chooses `superpowers` and it is missing, help install it before relying on it
 
 ### 3. Clarify Only What Changes Structure

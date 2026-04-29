@@ -41,7 +41,16 @@ Options:
   --core-flow <text>        short core loop summary
   --roadmap-goal <text>     high-level target route for the project
   --milestones <text>       milestone list separated by |
-  --docs-mode <value>       loopnova | none
+  --docs-mode <value>       loopnova | full-docs | none
+  --mvp <text>              first useful release scope for full-docs mode
+  --non-goals <text>        explicit v1 exclusions for full-docs mode
+  --success-metrics <text>  success metrics separated by |
+  --key-workflows <text>    core workflows separated by |
+  --integrations <text>     integration needs or constraints
+  --testing-strategy <text> validation approach for docs/testing/README.md
+  --api-scope <text>        API boundary description when an API exists
+  --risks <text>            notable risks separated by |
+  --open-questions <text>   unresolved questions separated by |
   --retrofit-depth <value>  overlay-only
   --instruction-file-mode <value> skip | append | overwrite
   --project-root <dir>      existing repository root for retrofit mode
@@ -128,6 +137,51 @@ function splitMilestones(value) {
     .split("|")
     .map((entry) => entry.trim())
     .filter(Boolean);
+}
+
+function textOrOpen(value, fallback) {
+  const normalized = value?.trim();
+  return normalized || fallback;
+}
+
+function splitList(value) {
+  if (!value) {
+    return [];
+  }
+  return value
+    .split("|")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function formatList(value, fallback) {
+  const values = Array.isArray(value) ? value : splitList(value);
+  if (values.length === 0) {
+    return `- ${fallback}`;
+  }
+  return formatBullets(values);
+}
+
+function requireFullDocsFields(config) {
+  if (config.docsMode !== "full-docs") {
+    return;
+  }
+  const required = [
+    ["idea", config.idea],
+    ["target-users", config.targetUsers],
+    ["core-flow", config.coreFlow],
+    ["mvp", config.mvp],
+    ["non-goals", config.nonGoals],
+    ["success-metrics", config.successMetrics],
+    ["key-workflows", config.keyWorkflows],
+    ["testing-strategy", config.testingStrategy]
+  ];
+  const missing = required
+    .filter(([, value]) => !value || value.includes("TODO:"))
+    .map(([key]) => `--${key}`);
+  if (missing.length > 0) {
+    throw new Error(`full-docs mode requires gathered requirements: ${missing.join(", ")}`);
+  }
 }
 
 function renderTemplate(template, variables) {
@@ -605,7 +659,7 @@ async function main() {
     }
 
     const docsMode = args["docs-mode"] ?? "loopnova";
-    if (!["loopnova", "none"].includes(docsMode)) {
+    if (!["loopnova", "full-docs", "none"].includes(docsMode)) {
       throw new Error(`Unsupported docs mode: ${docsMode}`);
     }
     const executionWorkflow = args["execution-workflow"] ?? "repo-native";
@@ -643,6 +697,15 @@ async function main() {
       idea: discovered.idea,
       targetUsers: discovered.targetUsers,
       coreFlow: discovered.coreFlow,
+      mvp: args.mvp ?? "TODO: define the first useful release scope.",
+      nonGoals: args["non-goals"] ?? "TODO: define explicit v1 exclusions.",
+      successMetrics: args["success-metrics"] ?? "",
+      keyWorkflows: args["key-workflows"] ?? "",
+      integrations: args.integrations ?? "No external integrations are confirmed yet.",
+      testingStrategy: args["testing-strategy"] ?? "TODO: define the validation approach.",
+      apiScope: args["api-scope"] ?? "No concrete API scope has been confirmed yet.",
+      risks: args.risks ?? "",
+      openQuestions: args["open-questions"] ?? "",
       roadmapGoal: args["roadmap-goal"] ?? "TODO: define the retrofit delivery route and milestone sequence if roadmap planning is desired.",
       dryRun: Boolean(args["dry-run"]),
       force: Boolean(args.force),
@@ -652,6 +715,7 @@ async function main() {
 
     apps = discovered.apps;
     domains = discovered.domains;
+    requireFullDocsFields(config);
     directories = new Set([
       "docs/archive",
       "docs/context",
@@ -720,7 +784,7 @@ async function main() {
     const projectSlug = normalizeSegment(projectName);
     projectRoot = path.resolve(args.root, projectSlug);
     const docsMode = args["docs-mode"] ?? "loopnova";
-    if (!["loopnova", "none"].includes(docsMode)) {
+    if (!["loopnova", "full-docs", "none"].includes(docsMode)) {
       throw new Error(`Unsupported docs mode: ${docsMode}`);
     }
     const executionWorkflow = args["execution-workflow"] ?? "repo-native";
@@ -747,6 +811,15 @@ async function main() {
       idea: args.idea ?? "TODO: summarize the product idea.",
       targetUsers: args["target-users"] ?? "TODO: define the primary target users.",
       coreFlow: args["core-flow"] ?? "TODO: define the primary product loop.",
+      mvp: args.mvp ?? "TODO: define the first useful release scope.",
+      nonGoals: args["non-goals"] ?? "TODO: define explicit v1 exclusions.",
+      successMetrics: args["success-metrics"] ?? "",
+      keyWorkflows: args["key-workflows"] ?? "",
+      integrations: args.integrations ?? "No external integrations are confirmed yet.",
+      testingStrategy: args["testing-strategy"] ?? "TODO: define the validation approach.",
+      apiScope: args["api-scope"] ?? "No concrete API scope has been confirmed yet.",
+      risks: args.risks ?? "",
+      openQuestions: args["open-questions"] ?? "",
       roadmapGoal: args["roadmap-goal"] ?? "TODO: define the target route from MVP to later milestones.",
       dryRun: Boolean(args["dry-run"]),
       force: Boolean(args.force)
@@ -776,7 +849,9 @@ async function main() {
     for (const entry of sharedEntries) {
       directories.add(entry);
     }
-    if (config.docsMode === "loopnova") {
+    requireFullDocsFields(config);
+
+    if (config.docsMode !== "none") {
       [
         "docs/archive",
         "docs/context",
@@ -827,11 +902,40 @@ async function main() {
     sharedEntries.length > 0
       ? formatBullets(sharedEntries.map((entry) => `\`${entry}\``))
       : "- No dedicated shared directories yet.";
+  const mvpScope = textOrOpen(config.mvp, "Open question: define the first useful release scope.");
+  const nonGoals = textOrOpen(config.nonGoals, "Open question: define explicit v1 exclusions.");
+  const integrations = textOrOpen(config.integrations, "No external integrations are confirmed yet.");
+  const testingStrategy = textOrOpen(config.testingStrategy, "Define the validation approach before implementation.");
+  const apiScope = textOrOpen(config.apiScope, "No concrete API scope has been confirmed yet.");
+  const successMetricsBullets = formatList(
+    config.successMetrics,
+    "Define measurable success metrics before implementation."
+  );
+  const keyWorkflowsBullets = formatList(
+    config.keyWorkflows,
+    "Define the core user workflows before implementation."
+  );
+  const risksBullets = formatList(
+    config.risks,
+    "No major risks have been confirmed yet."
+  );
+  const openQuestionsBullets = formatList(
+    config.openQuestions,
+    "No open questions have been recorded yet."
+  );
+  const primaryTaskStatePath = `docs/tasks/${domains[0] ?? "platform"}/INDEX.md`;
   const apiBullets = buildApiGroups(domains, config.withAdmin);
   const hasApiBoundary = apps.some((app) => app.id === "api") || config.backend !== "none";
   const apiApplicabilityHeading = hasApiBoundary ? "## Suggested API Groups" : "## Applicability";
   const apiApplicabilityBody = hasApiBoundary
-    ? apiBullets
+    ? [
+        `Confirmed API scope: ${apiScope}`,
+        "",
+        "Suggested route groups:",
+        apiBullets,
+        "",
+        `Integration context: ${integrations}`
+      ].join("\n")
     : "This project does not currently have a standalone API boundary, so this document remains a light placeholder until an API surface is introduced.";
   const milestoneValues =
     milestones.length > 0
@@ -981,6 +1085,16 @@ async function main() {
     idea: config.idea,
     targetUsers: config.targetUsers,
     coreFlow: config.coreFlow,
+    mvpScope,
+    nonGoals,
+    successMetricsBullets,
+    keyWorkflowsBullets,
+    integrations,
+    testingStrategy,
+    apiScope,
+    risksBullets,
+    openQuestionsBullets,
+    primaryTaskStatePath,
     roadmapGoal: config.roadmapGoal,
     milestoneBullets,
     retrofitReadNote,
@@ -1061,6 +1175,7 @@ async function main() {
     if (file.endsWith("/INDEX.md")) {
       const moduleName = file.split("/").slice(-2, -1)[0];
       const content = renderTemplate(templates["module-index"], {
+        ...templateVars,
         moduleName
       });
       await writeGeneratedText(targetPath, content, {

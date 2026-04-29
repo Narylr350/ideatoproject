@@ -42,7 +42,7 @@
 
 如果用户不只要目录结构，也希望把核心文档一次性落到仓库中，可以进入 `full-docs`（结构 + 核心文档落盘）模式。
 
-该模式会根据需求动态填充：
+该模式会吸收 `product-requirements` 的核心能力，但不会生搬硬套成 PRD 流程：先判断这些 canonical docs 是否已经有足够具体的信息可写，再围绕业务目标、用户、核心流程、MVP、非目标、指标、风险、集成/API 边界和测试策略做小批量追问。确认足够后，会根据需求动态填充：
 
 - `docs/context/project-overview.md`
 - `docs/context/architecture.md`
@@ -53,6 +53,8 @@
 - `docs/testing/README.md`
 
 其中 `development-roadmap.md` 和 `api.md` 是否写实，取决于项目是否真的需要路线规划或独立 API 边界；不会为了“完整”而机械填满。
+
+脚本侧的 `--docs-mode full-docs` 会接收并写入 `--mvp`、`--non-goals`、`--success-metrics`、`--key-workflows`、`--integrations`、`--testing-strategy`、`--api-scope`、`--risks`、`--open-questions` 等字段，避免只生成 TODO 占位文档。
 
 ### 3. 旧项目 Retrofit
 

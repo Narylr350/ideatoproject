@@ -2,20 +2,33 @@
 
 Use this directory for validation notes that should survive across AI sessions.
 
+## Testing Strategy
+
+{{testingStrategy}}
+
 ## Standard Checks
 
-- TODO: list the default test, lint, typecheck, build, or manual validation commands for this repository
+- Define the concrete test, lint, typecheck, and build commands when the runtime is initialized.
+- Keep each command here once it exists so future AI sessions can verify work without rediscovery.
 
 ## Manual Checks
 
-- TODO: list manual flows that matter when automated coverage is missing
+Use these product workflows as manual validation targets until automated coverage exists:
+
+{{keyWorkflowsBullets}}
 
 ## Recent Evidence
 
-- TODO: record recent meaningful verification results with dates or task references
+- No implementation verification has been recorded yet. Add dated evidence here after the first build, test, or manual validation run.
 
 ## Known Gaps
 
-- TODO: list test gaps, flaky checks, missing fixtures, or validation risks
+Risks and gaps to account for:
+
+{{risksBullets}}
+
+Open validation questions:
+
+{{openQuestionsBullets}}
 
 Keep task-specific detail in `docs/tasks/<module>/`. Keep durable validation rules and cross-module evidence here.

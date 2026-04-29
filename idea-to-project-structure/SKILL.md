@@ -11,7 +11,7 @@ Turn an idea or existing repository into a practical, AI-friendly project struct
 
 This skill:
 
-- borrows lightweight clarification from `product-requirements`
+- absorbs the core requirements-discovery discipline from `product-requirements`
 - borrows the docs/context skeleton philosophy from `LoopNova`
 - does not force a fixed tech stack
 - does not copy LoopNova's business modules
@@ -50,7 +50,7 @@ For old repositories, retrofit mode is limited to project structure, bootstrap f
 ## Capability Contract
 
 - `structure-only`: start from an idea, ask lightweight structure-changing questions, then produce a suitable project skeleton.
-- `full-docs`: produce structure plus core docs in the repository. Fill docs dynamically from the user's needs; do not mechanically fill roadmap or API docs when the project does not need those boundaries.
+- `full-docs`: produce structure plus core docs in the repository. Adapt the useful requirements-discovery discipline from `product-requirements` into this skill's structure/docs workflow: check whether the canonical docs can be written concretely, ask targeted gaps, then map answers into `AI_CONTEXT.md` and `docs/*`. Do not generate a standalone PRD unless the user explicitly asks for one.
 - `retrofit-existing-project`: add an AI-friendly bootstrap/docs layer to an existing repository without moving source code by default.
 
 ## Use This Skill When
@@ -125,10 +125,16 @@ Always collect the minimum defensible information:
 Mode-specific depth:
 
 - `structure-only`: ask only structure-changing questions
-- `full-docs`: gather enough product, workflow, MVP, non-goal, and integration detail to write core docs before running the script
+- `full-docs`: gather enough product, workflow, MVP, non-goal, success metric, risk, testing, integration, and API-boundary detail to write core docs before running the script
 - `retrofit-existing-project`: inspect the repo first, then ask only what is needed for structure/bootstrap overlay decisions
 
-For `full-docs`, confirming execution workflow, tech stack, and whether to create files is not enough. Ask at least one focused requirements batch before scaffolding unless the user already supplied clear answers for product goal, target users, core flow, MVP scope, and non-goals.
+For `full-docs`, confirming execution workflow, tech stack, and whether to create files is not enough. Treat this as a canonical-doc readiness pass, not a copied PRD workflow:
+
+1. Check whether each target doc has enough concrete inputs to be written.
+2. Ask targeted questions in batches of 2-3, focusing on the missing doc sections.
+3. Continue until the docs can be materially written, not merely scaffolded.
+4. Do not use PRD-only artifacts, persona theater, or a generic requirements document unless the user asks for those explicitly.
+5. Do not run the script until product goal, target users, core flow, MVP scope, non-goals, success metrics, key workflows, testing strategy, and API/integration boundaries are known or explicitly marked as open questions.
 
 Load extra guidance only when needed:
 
@@ -195,12 +201,15 @@ Script responsibilities:
 - create shape-driven app folders
 - create `AGENTS.md`, `CLAUDE.md`, and `AI_CONTEXT.md`
 - create canonical docs under `docs/context/`, `docs/product/`, `docs/engineering/`, `docs/tasks/`, `docs/testing/`, and `docs/archive/`
+- in `--docs-mode full-docs`, write gathered requirements into the core docs instead of leaving generic placeholders
 - create module task-state files under `docs/tasks/<module>/INDEX.md`
 - optionally write roadmap docs
 
 Important flags:
 
 - `--execution-workflow superpowers|repo-native`
+- `--docs-mode loopnova|full-docs|none`
+- `--mvp`, `--non-goals`, `--success-metrics`, `--key-workflows`, `--integrations`, `--testing-strategy`, `--api-scope`, `--risks`, `--open-questions`
 - `--instruction-file-mode skip|append|overwrite`
 - `--retrofit-depth overlay-only`
 

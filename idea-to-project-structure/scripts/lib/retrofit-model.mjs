@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { normalizeBool, normalizeSegment, requireFullDocsFields } from "./args.mjs";
+import { normalizeBool, normalizeSegment, requireFullDocsFields, splitCsv } from "./args.mjs";
 import { usage } from "./constants.mjs";
 import { discoverExistingProject } from "./discovery.mjs";
 import { pathExists } from "./fs-utils.mjs";
@@ -41,6 +41,9 @@ export async function buildRetrofitModel(args, manifest) {
     projectName: args.name?.trim() || path.basename(projectRoot),
     projectSlug: normalizeSegment(args.name?.trim() || path.basename(projectRoot)),
     shape: discovered.shape,
+    platform: args.platform ?? "none",
+    runtime: args.runtime ?? "none",
+    ui: args.ui ?? "none",
     frontend: discovered.frontend,
     backend: discovered.backend,
     mobile: discovered.mobile,
@@ -63,6 +66,7 @@ export async function buildRetrofitModel(args, manifest) {
     risks: args.risks ?? "",
     openQuestions: args["open-questions"] ?? "",
     roadmapGoal: args["roadmap-goal"] ?? "TODO: define the retrofit delivery route and milestone sequence if roadmap planning is desired.",
+    engineeringDocs: splitCsv(args["engineering-docs"]),
     dryRun: Boolean(args["dry-run"]),
     force: Boolean(args.force),
     retrofitDepth,
@@ -71,6 +75,7 @@ export async function buildRetrofitModel(args, manifest) {
 
   const apps = discovered.apps;
   const domains = discovered.domains;
+  config.hasApiBoundary = apps.some((app) => app.id === "api") || config.backend !== "none";
   requireFullDocsFields(config);
 
   const directories = new Set([
@@ -90,12 +95,17 @@ export async function buildRetrofitModel(args, manifest) {
     "docs/context/architecture.md",
     "docs/context/tech-stack.md",
     "docs/product/idea.md",
-    "docs/engineering/api.md",
     "docs/tasks/TEMPLATE.md",
     "docs/testing/README.md"
   ]);
+  if (config.hasApiBoundary || config.engineeringDocs.includes("api")) {
+    files.add("docs/engineering/api.md");
+  }
   if (config.withRoadmap) {
     files.add("docs/context/development-roadmap.md");
+  }
+  for (const engineeringDoc of config.engineeringDocs) {
+    files.add(`docs/engineering/${engineeringDoc}.md`);
   }
   for (const domain of domains) {
     directories.add(`docs/tasks/${domain}`);

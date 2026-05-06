@@ -185,6 +185,8 @@ Convert the discussion into:
 - `with_roadmap`
 - `milestones`
 - `existing_canonical_docs`
+- `platform`, `runtime`, and `ui` when the project is not well described by frontend/backend/mobile
+- `engineering_docs` when full-docs needs domain- or platform-specific engineering boundaries
 - `full_docs_fields` when mode is `full-docs`: MVP, non-goals, success metrics, key workflows, integrations, testing strategy, API scope, risks, open questions
 - `target_root` and `project_name` when files will be created
 
@@ -244,6 +246,8 @@ Script responsibilities:
 - create `AGENTS.md`, `CLAUDE.md`, and `AI_CONTEXT.md`
 - create canonical docs under `docs/context/`, `docs/product/`, `docs/engineering/`, `docs/tasks/`, `docs/testing/`, and `docs/archive/`
 - in `--docs-mode full-docs`, write gathered requirements into the core docs instead of leaving generic placeholders
+- create `docs/engineering/api.md` only when the scaffold has a standalone API boundary or `api` is explicitly requested through `--engineering-docs`
+- create AI-selected engineering boundary docs such as `docs/engineering/<boundary>.md` when `--engineering-docs` is provided
 - create module task-state files under `docs/tasks/<module>/INDEX.md`
 - optionally write roadmap docs
 
@@ -251,6 +255,8 @@ Important flags:
 
 - `--execution-workflow superpowers|repo-native`
 - `--docs-mode loopnova|full-docs|none`
+- `--platform`, `--runtime`, `--ui` for desktop, local utility, native, or other non-Web project shapes
+- `--engineering-docs <csv>` for docs the AI selected from the actual product context, not from a static industry checklist
 - `--mvp`, `--non-goals`, `--success-metrics`, `--key-workflows`, `--integrations`, `--testing-strategy`, `--api-scope`, `--risks`, `--open-questions`
 - `--instruction-file-mode skip|append|overwrite`
 - `--retrofit-depth overlay-only`

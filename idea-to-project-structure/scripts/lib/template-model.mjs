@@ -1,6 +1,8 @@
 import { splitMilestones, textOrOpen } from "./args.mjs";
 import {
   buildApiGroups,
+  buildBoundaryRules,
+  buildSelectedStackBullets,
   buildStructureTree,
   buildTechStackFit,
   formatBullets,
@@ -37,6 +39,12 @@ export function buildTemplateContext(model, args) {
     sharedEntries.length > 0
       ? formatBullets(sharedEntries.map((entry) => `\`${entry}\``))
       : "- No dedicated shared directories yet.";
+  const selectedStackBullets = buildSelectedStackBullets(config);
+  const boundaryRules = buildBoundaryRules(config);
+  const engineeringDocsBullets =
+    config.engineeringDocs?.length > 0
+      ? formatBullets(config.engineeringDocs.map((entry) => `docs/engineering/${entry}.md`))
+      : "- No extra engineering boundary docs were requested for the initial scaffold.";
   const mvpScope = textOrOpen(config.mvp, "Open question: define the first useful release scope.");
   const nonGoals = textOrOpen(config.nonGoals, "Open question: define explicit v1 exclusions.");
   const integrations = textOrOpen(config.integrations, "No external integrations are confirmed yet.");
@@ -60,7 +68,7 @@ export function buildTemplateContext(model, args) {
   );
   const primaryTaskStatePath = `docs/tasks/${domains[0] ?? "platform"}/INDEX.md`;
   const apiBullets = buildApiGroups(domains, config.withAdmin);
-  const hasApiBoundary = apps.some((app) => app.id === "api") || config.backend !== "none";
+  const hasApiBoundary = Boolean(config.hasApiBoundary);
   const apiApplicabilityHeading = hasApiBoundary ? "## Suggested API Groups" : "## Applicability";
   const apiApplicabilityBody = hasApiBoundary
     ? [
@@ -111,6 +119,9 @@ export function buildTemplateContext(model, args) {
     projectName: config.projectName,
     projectSlug: config.projectSlug,
     shape: config.shape,
+    platform: config.platform,
+    runtime: config.runtime,
+    ui: config.ui,
     frontend: config.frontend,
     backend: config.backend,
     mobile: config.mobile,
@@ -142,6 +153,9 @@ export function buildTemplateContext(model, args) {
     roadmapEntry,
     ...workflowCopy,
     techStackFit,
+    selectedStackBullets,
+    boundaryRules,
+    engineeringDocsBullets,
     appBullets,
     domainBullets,
     appBoundaries,
@@ -167,6 +181,10 @@ export function buildTemplateContext(model, args) {
     canonicalDocs: retrofitCanonicalDocs,
     directories: [...directories].sort(),
     files: [...files].sort(),
+    platform: config.platform,
+    runtime: config.runtime,
+    ui: config.ui,
+    engineeringDocs: config.engineeringDocs ?? [],
     notes: retrofitNotes
   };
 

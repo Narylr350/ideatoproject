@@ -58,6 +58,11 @@ export function buildStructureTree(projectSlug, directories, files) {
 }
 
 export function appStack(appId, config) {
+  if (appId === "desktop") {
+    return [config.platform, config.runtime, config.ui]
+      .filter((value) => value && value !== "none")
+      .join(" + ") || "desktop runtime undecided";
+  }
   if (appId === "api") {
     return config.backend;
   }
@@ -88,6 +93,8 @@ export function appRole(appId) {
       return "Mobile client for end users.";
     case "worker":
       return "Background jobs, queue consumers, or AI workloads.";
+    case "desktop":
+      return "Desktop application shell and local user interaction boundary.";
     case "app":
       return "Primary application root for the product.";
     default:
@@ -106,6 +113,15 @@ export function buildApiGroups(domains, withAdmin) {
 
 export function buildTechStackFit(config) {
   const parts = [];
+  if (config.platform !== "none") {
+    parts.push(`Platform work is expected on \`${config.platform}\`.`);
+  }
+  if (config.runtime !== "none") {
+    parts.push(`Runtime work is expected in \`${config.runtime}\`.`);
+  }
+  if (config.ui !== "none") {
+    parts.push(`UI work is expected in \`${config.ui}\`.`);
+  }
   if (config.frontend !== "none") {
     parts.push(`Frontend work is expected in \`${config.frontend}\`.`);
   }
@@ -121,4 +137,40 @@ export function buildTechStackFit(config) {
     parts.push("A worker boundary is present for asynchronous or background execution.");
   }
   return parts.join(" ");
+}
+
+export function buildSelectedStackBullets(config) {
+  const stack = [
+    ["Platform", config.platform],
+    ["Runtime", config.runtime],
+    ["UI", config.ui],
+    ["Frontend", config.frontend],
+    ["Backend", config.backend],
+    ["Mobile", config.mobile],
+    ["Package manager", config.packageManager]
+  ].filter(([, value]) => value && value !== "none");
+
+  if (stack.length === 0) {
+    return "- Stack choices are not locked yet.";
+  }
+
+  return formatBullets(stack.map(([label, value]) => `${label}: \`${value}\``));
+}
+
+export function buildBoundaryRules(config) {
+  if (config.shape === "desktop-app" || config.platform !== "none") {
+    return formatBullets([
+      "Keep operating-system integrations behind documented adapters.",
+      "Keep product rules outside UI event handlers where practical.",
+      "Document local storage, permissions, and lifecycle behavior before implementation depends on them.",
+      "Keep docs synchronized when structure or boundaries change."
+    ]);
+  }
+
+  return formatBullets([
+    "Keep business rules inside the app or service that owns them.",
+    "Prefer shared packages for stable contracts, types, or utilities.",
+    "Do not create a new app unless the user-facing or operational boundary is real.",
+    "Keep docs synchronized when structure or boundaries change."
+  ]);
 }

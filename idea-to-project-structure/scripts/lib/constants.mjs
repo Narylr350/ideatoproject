@@ -19,12 +19,16 @@ Usage:
 
 Shapes:
   single-app
+  desktop-app
   frontend-backend
   monorepo-web-api-admin
   mobile-api-admin
   ai-service-app
 
 Options:
+  --platform <value>        windows-desktop | macos-desktop | linux-desktop | desktop | web | mobile | none
+  --runtime <value>         dotnet | rust | node | python | go | java | none
+  --ui <value>              wpf | winui | avalonia | tauri | electron | native | webview | none
   --frontend <value>        react | nextjs | vue | nuxt | svelte | none
   --backend <value>         fastapi | nestjs | spring-boot | express | go | none
   --mobile <value>          flutter | react-native | none
@@ -47,6 +51,7 @@ Options:
   --integrations <text>     integration needs or constraints
   --testing-strategy <text> validation approach for docs/testing/README.md
   --api-scope <text>        API boundary description when an API exists
+  --engineering-docs <csv>  AI-selected engineering boundary docs, e.g. clipboard,packaging,provider-boundary
   --risks <text>            notable risks separated by |
   --open-questions <text>   unresolved questions separated by |
   --retrofit-depth <value>  overlay-only

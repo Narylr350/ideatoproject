@@ -147,6 +147,98 @@ test("full-docs mode writes gathered requirements into core docs", async () => {
   }
 });
 
+test("full-docs supports desktop platform slots and AI-selected engineering docs", async () => {
+  const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "itps-desktop-docs-"));
+  try {
+    await execFileAsync(process.execPath, [
+      scriptPath,
+      "--mode",
+      "new",
+      "--root",
+      tempRoot,
+      "--name",
+      "Capture Desk",
+      "--shape",
+      "desktop-app",
+      "--platform",
+      "windows-desktop",
+      "--runtime",
+      "dotnet",
+      "--ui",
+      "wpf",
+      "--execution-workflow",
+      "repo-native",
+      "--docs-mode",
+      "full-docs",
+      "--domains",
+      "capture,ocr,clipboard,settings",
+      "--engineering-docs",
+      "file-watcher,ocr-provider,clipboard,settings-storage,packaging,performance",
+      "--idea",
+      "Turn desktop screenshots into searchable text snippets without leaving the keyboard.",
+      "--target-users",
+      "Windows power users who frequently capture, OCR, and reuse text from screenshots.",
+      "--core-flow",
+      "User captures a region, OCR runs locally or through a provider, the text is reviewed, and the chosen text is copied.",
+      "--mvp",
+      "Tray app, capture intake, OCR provider boundary, clipboard write confirmation, local settings, and packaging notes.",
+      "--non-goals",
+      "No cloud account, no image library, no multi-user sync, and no screenshot editor in v1.",
+      "--success-metrics",
+      "Copy OCR text in under five seconds | Keep idle memory below an agreed desktop budget",
+      "--key-workflows",
+      "Capture screenshot | Run OCR | Review text | Copy result | Adjust provider settings",
+      "--integrations",
+      "Windows clipboard, local file system, optional OCR provider, and installer packaging.",
+      "--testing-strategy",
+      "Unit-test provider adapters; manually verify tray lifecycle, clipboard behavior, and packaging smoke install.",
+      "--api-scope",
+      "No standalone API boundary; provider adapters are local integration contracts.",
+      "--risks",
+      "Clipboard overwrite surprises | OCR provider latency | Windows tray lifecycle edge cases",
+      "--open-questions",
+      "Which OCR provider ships first?"
+    ]);
+
+    const projectRoot = path.join(tempRoot, "capture-desk");
+    const techStack = await fsp.readFile(path.join(projectRoot, "docs/context/tech-stack.md"), "utf8");
+    const architecture = await fsp.readFile(path.join(projectRoot, "docs/context/architecture.md"), "utf8");
+    const readme = await fsp.readFile(path.join(projectRoot, "README.md"), "utf8");
+    const appReadme = await fsp.readFile(path.join(projectRoot, "src/App/README.md"), "utf8");
+    const gitignore = await fsp.readFile(path.join(projectRoot, ".gitignore"), "utf8");
+    const watcherDoc = await fsp.readFile(path.join(projectRoot, "docs/engineering/file-watcher.md"), "utf8");
+    const clipboardDoc = await fsp.readFile(path.join(projectRoot, "docs/engineering/clipboard.md"), "utf8");
+    const packagingDoc = await fsp.readFile(path.join(projectRoot, "docs/engineering/packaging.md"), "utf8");
+    const ocrIndex = await fsp.readFile(path.join(projectRoot, "docs/tasks/ocr/INDEX.md"), "utf8");
+
+    assert.equal(await pathExists(path.join(projectRoot, "docs/engineering/api.md")), false);
+    assert.match(techStack, /Platform: `windows-desktop`/);
+    assert.match(techStack, /Runtime: `dotnet`/);
+    assert.match(techStack, /UI: `wpf`/);
+    assert.doesNotMatch(techStack, /Frontend: `none`/);
+    assert.match(readme, /Platform: `windows-desktop`/);
+    assert.match(appReadme, /Desktop application shell/);
+    assert.match(gitignore, /^\.codex\/$/m);
+    assert.match(gitignore, /^\.claude\/$/m);
+    assert.match(gitignore, /^\.gemini\/$/m);
+    assert.match(gitignore, /^\.cursor\/$/m);
+    assert.match(gitignore, /^AGENTS\.md$/m);
+    assert.match(gitignore, /^CLAUDE\.md$/m);
+    assert.match(gitignore, /^AI_CONTEXT\.md$/m);
+    assert.match(gitignore, /^docs\/\*\*$/m);
+    assert.match(architecture, /Keep operating-system integrations behind documented adapters/);
+    assert.doesNotMatch(architecture, /Prefer shared packages/);
+    assert.match(watcherDoc, /# Engineering Boundary: file-watcher/);
+    assert.match(watcherDoc, /Capture screenshot/);
+    assert.match(clipboardDoc, /Windows clipboard/);
+    assert.match(packagingDoc, /installer packaging/);
+    assert.match(ocrIndex, /ocr/);
+    assert.match(ocrIndex, /Run OCR/);
+  } finally {
+    await fsp.rm(tempRoot, { recursive: true, force: true });
+  }
+});
+
 test("new project dry-run prints scaffold plan without creating files", async () => {
   const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "itps-dry-run-new-"));
   try {
@@ -247,4 +339,25 @@ test("skill documents how agents should use the bundled script", async () => {
   assert.match(skill, /scripts\/init-project-structure\.mjs/);
   assert.match(skill, /Do not hand-write generated scaffold files/i);
   assert.match(skill, /scripts\/README\.md/);
+  assert.match(skill, /--engineering-docs/);
+  assert.match(skill, /--platform/);
+});
+
+test("Claude and generic agent instruction templates keep the same core content", async () => {
+  const agents = await fsp.readFile(
+    path.join(skillRoot, "assets/templates/docs/AGENTS.md.tmpl"),
+    "utf8"
+  );
+  const claude = await fsp.readFile(
+    path.join(skillRoot, "assets/templates/docs/CLAUDE.md.tmpl"),
+    "utf8"
+  );
+
+  const normalizeEntrypoint = (content) =>
+    content
+      .replace(/\r\n/g, "\n")
+      .replace(/^# (AGENTS|CLAUDE)\.md/m, "# INSTRUCTION.md")
+      .replace(/`(AGENTS|CLAUDE)\.md`/g, "`INSTRUCTION.md`");
+
+  assert.equal(normalizeEntrypoint(claude), normalizeEntrypoint(agents));
 });

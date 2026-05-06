@@ -15,7 +15,12 @@ export function addDocsLayer({ config, domains, directories, files }) {
   files.add("docs/context/architecture.md");
   files.add("docs/context/tech-stack.md");
   files.add("docs/product/idea.md");
-  files.add("docs/engineering/api.md");
+  if (config.hasApiBoundary || config.engineeringDocs?.includes("api")) {
+    files.add("docs/engineering/api.md");
+  }
+  for (const engineeringDoc of config.engineeringDocs ?? []) {
+    files.add(`docs/engineering/${engineeringDoc}.md`);
+  }
   files.add("docs/tasks/TEMPLATE.md");
   files.add("docs/testing/README.md");
   for (const domain of domains) {

@@ -45,6 +45,26 @@ init-project-structure.mjs
 - `lib/workspace-files.mjs`: generated non-template workspace files such as `.gitignore`, `package.json`, and `pnpm-workspace.yaml`.
 - `lib/writer.mjs`: writes template-backed files, module indexes, workspace files, and app README files.
 
+## Extensible Project Slots
+
+The generator should not grow a hardcoded template for every platform, industry, or integration.
+For projects that do not fit Web/frontend/backend defaults, use the generic slots:
+
+- `--shape desktop-app` for local desktop applications and utilities.
+- `--platform`, `--runtime`, and `--ui` for stack axes such as `windows-desktop`, `dotnet`, and `wpf`.
+- `--engineering-docs <csv>` for AI-selected boundary docs derived from the actual product context.
+
+`--engineering-docs clipboard,packaging,provider-boundary` creates generic
+`docs/engineering/<name>.md` files. The AI should fill those files from the approved full-docs
+field package rather than expecting the generator to know every domain-specific answer.
+
+`docs/engineering/api.md` is generated only when the scaffold has a standalone API boundary or
+when `api` is explicitly included in `--engineering-docs`.
+
+`.gitignore` includes local AI tool state such as `.codex/`, `.claude/`, `.gemini/`, and
+`.cursor/`. It also ignores generated AI context docs by default: `AGENTS.md`, `CLAUDE.md`,
+`AI_CONTEXT.md`, and `docs/**`.
+
 ## Maintenance Rules
 
 - Keep `init-project-structure.mjs` as a thin CLI wrapper.

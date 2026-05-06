@@ -16,6 +16,29 @@
       "defaultWithAdmin": false,
       "defaultWithWorker": false
     },
+    "desktop-app": {
+      "description": "Desktop application with a local app shell and optional platform integrations.",
+      "apps": [
+        {
+          "id": "desktop",
+          "path": "src/App",
+          "label": "Desktop application shell"
+        }
+      ],
+      "packages": [
+        "src/Core",
+        "src/Infrastructure",
+        "tests"
+      ],
+      "tools": [
+        "tools"
+      ],
+      "defaultPlatform": "desktop",
+      "defaultRuntime": "none",
+      "defaultUi": "none",
+      "defaultWithAdmin": false,
+      "defaultWithWorker": false
+    },
     "frontend-backend": {
       "description": "Separate user-facing app and backend API with optional admin.",
       "apps": [

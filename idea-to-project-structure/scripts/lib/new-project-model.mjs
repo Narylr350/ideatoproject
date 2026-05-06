@@ -33,6 +33,9 @@ export function buildNewProjectModel(args, manifest) {
     projectName,
     projectSlug,
     shape: args.shape,
+    platform: args.platform ?? shapeConfig.defaultPlatform ?? "none",
+    runtime: args.runtime ?? shapeConfig.defaultRuntime ?? "none",
+    ui: args.ui ?? shapeConfig.defaultUi ?? "none",
     frontend: args.frontend ?? "none",
     backend: args.backend ?? "none",
     mobile: args.mobile ?? "none",
@@ -55,6 +58,7 @@ export function buildNewProjectModel(args, manifest) {
     risks: args.risks ?? "",
     openQuestions: args["open-questions"] ?? "",
     roadmapGoal: args["roadmap-goal"] ?? "TODO: define the target route from MVP to later milestones.",
+    engineeringDocs: splitCsv(args["engineering-docs"]),
     dryRun: Boolean(args["dry-run"]),
     force: Boolean(args.force)
   };
@@ -73,6 +77,7 @@ export function buildNewProjectModel(args, manifest) {
   if (config.withWorker && !apps.some((app) => app.id === "worker")) {
     apps.push({ id: "worker", path: "apps/worker", label: "Worker service" });
   }
+  config.hasApiBoundary = apps.some((app) => app.id === "api") || config.backend !== "none";
 
   const directories = new Set();
   const files = new Set();

@@ -17,6 +17,7 @@ async function loadTemplates() {
     "docs/context/tech-stack.md": await loadText("docs/tech-stack.md.tmpl"),
     "docs/product/idea.md": await loadText("docs/idea.md.tmpl"),
     "docs/engineering/api.md": await loadText("docs/api.md.tmpl"),
+    "engineering-boundary": await loadText("docs/engineering-boundary.md.tmpl"),
     "docs/tasks/TEMPLATE.md": await loadText("docs/task-template.md.tmpl"),
     "docs/testing/README.md": await loadText("docs/testing-readme.md.tmpl"),
     "app-readme": await loadText("docs/app-readme.md.tmpl"),
@@ -42,6 +43,21 @@ export async function writeScaffold(model, templateVars) {
       const content = renderTemplate(templates["module-index"], {
         ...templateVars,
         moduleName
+      });
+      await writeGeneratedText(targetPath, content, {
+        dryRun: false,
+        overwrite: mode === "new" || config.force,
+        writes,
+        skips
+      });
+      continue;
+    }
+
+    if (file.startsWith("docs/engineering/") && !templates[file]) {
+      const engineeringDocName = path.basename(file, ".md");
+      const content = renderTemplate(templates["engineering-boundary"], {
+        ...templateVars,
+        engineeringDocName
       });
       await writeGeneratedText(targetPath, content, {
         dryRun: false,

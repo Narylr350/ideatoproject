@@ -4,7 +4,7 @@
 
 For any non-trivial task, start with `AI_CONTEXT.md`.
 
-Use this reading chain:
+Do not try to understand the whole repository by scanning random files first. Use the bootstrap chain:
 
 1. `CLAUDE.md`
 2. `AI_CONTEXT.md`
@@ -17,16 +17,13 @@ Use this reading chain:
 9. relevant files under `docs/engineering/`
 10. relevant files under `docs/tasks/`
 
-## Purpose
+## Why This Exists
 
-This repository uses layered project context so a new AI conversation can recover the whole project meaning without scanning the whole repo.
+This repository is organized to reduce token waste across repeated AI sessions.
 
-- `AI_CONTEXT.md` is the compressed bootstrap index.
-- `docs/context/` stores stable project meaning.
-- `docs/engineering/` stores technical contracts.
-- `docs/tasks/<module>/INDEX.md` stores the evolving state summary for each module.
-- `docs/tasks/` stores module-local execution context.
-- `docs/archive/` stores historical docs and superseded project materials.
+- `CLAUDE.md` is the stable entrypoint.
+- `AI_CONTEXT.md` is the compressed whole-project index.
+- canonical detail is pushed into `docs/context/`, `docs/engineering/`, and `docs/tasks/`.
 
 ## Project Notes
 
@@ -34,23 +31,23 @@ This repository uses layered project context so a new AI conversation can recove
 - Shape: `{{shape}}`
 - Execution workflow: `{{executionWorkflow}}`
 - Product goal: {{idea}}
-- Core flow: {{coreFlow}}
+- Target users: {{targetUsers}}
 
-## Maintenance Rule
+## Working Rule
 
-When project structure or canonical project understanding changes, update `AI_CONTEXT.md`, the affected `docs/tasks/<module>/INDEX.md` files, and the relevant context docs together.
+When structure, architecture, or domain ownership changes, update `AI_CONTEXT.md`, the affected `docs/tasks/<module>/INDEX.md` files, and the affected canonical docs in the same change.
 
 ## Repository Structure Priority
 
-- Generic workflow tooling must adapt to this repository's structure, not the other way around.
+- Repository-local structure and docs layout take priority over generic skill defaults.
 {{workflowToolingRules}}
 - Use:
-  - `docs/context/` for stable project context
+  - `docs/context/` for stable context
   - `docs/product/` for product intent
-  - `docs/engineering/` for engineering contracts
+  - `docs/engineering/` for technical contracts
   - `docs/tasks/` for task and module records
   - `docs/archive/` for historical docs, older project materials, and superseded planning artifacts
-- Keep repository-level rules generic and intentional; do not inherit personal conventions from unrelated source repositories by accident.
+- Do not copy workflow habits from other repositories unless they are intentionally adopted here.
 
 ## Mandatory Writeback
 
